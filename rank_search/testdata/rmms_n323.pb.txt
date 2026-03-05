@@ -1,0 +1,1084 @@
+restricted_mm {
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[00,01,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    text: "[00,00,10]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "0"
+}
+restricted_mm {
+  index: 1
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[00,01,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    text: "[00,00,10]"
+  }
+  tensor: "a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 2
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "a11*b00*c02 + a11*b01*c12 + a11*b02*c22 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21"
+}
+restricted_mm {
+  index: 3
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[00,01,00]"
+  }
+  tensor: "a20*b00*c02 + a20*b01*c12 + a20*b02*c22 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 4
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    text: "[00,00,10]"
+  }
+  tensor: "a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 5
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  tensor: "a11*b00*c02 + a11*b01*c12 + a11*b02*c22 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 6
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22"
+}
+restricted_mm {
+  index: 7
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 1
+    text: "[00,11,01]"
+  }
+  tensor: "a10*b00*c01 + a10*b01*c11 + a10*b02*c21 + a10*b10*c02 + a10*b11*c12 + a10*b12*c22 + a11*b00*c02 + a11*b01*c12 + a11*b02*c22 + a11*b10*c01 + a11*b10*c02 + a11*b11*c11 + a11*b11*c12 + a11*b12*c21 + a11*b12*c22"
+}
+restricted_mm {
+  index: 8
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    text: "[01,00,10]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "a01*b00*c02 + a01*b01*c12 + a01*b02*c22 + a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21"
+}
+restricted_mm {
+  index: 9
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "a01*b00*c01 + a01*b01*c11 + a01*b02*c21 + a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a11*b00*c02 + a11*b01*c12 + a11*b02*c22 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21"
+}
+restricted_mm {
+  index: 10
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  tensor: "a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 11
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  tensor: "a10*b00*c01 + a10*b01*c11 + a10*b02*c21 + a11*b00*c02 + a11*b01*c12 + a11*b02*c22 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 12
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    text: "[00,00,10]"
+  }
+  tensor: "a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 13
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    text: "[01,00,10]"
+  }
+  tensor: "a01*b00*c02 + a01*b01*c12 + a01*b02*c22 + a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 14
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22"
+}
+restricted_mm {
+  index: 15
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[00,01,00]"
+  }
+  tensor: "a01*b00*c01 + a01*b01*c11 + a01*b02*c21 + a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 16
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  tensor: "a01*b00*c01 + a01*b01*c11 + a01*b02*c21 + a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a11*b00*c02 + a11*b01*c12 + a11*b02*c22 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 17
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "a01*b00*c01 + a01*b01*c11 + a01*b02*c21 + a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22"
+}
+restricted_mm {
+  index: 18
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[00,01,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    text: "[00,00,11]"
+  }
+  tensor: "a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a10*b00*c01 + a10*b01*c11 + a10*b02*c21 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22 + a20*b10*c02 + a20*b11*c12 + a20*b12*c22"
+}
+restricted_mm {
+  index: 19
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 1
+    text: "[00,11,01]"
+  }
+  tensor: "a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a10*b00*c01 + a10*b01*c11 + a10*b02*c21 + a10*b10*c02 + a10*b11*c12 + a10*b12*c22 + a11*b00*c02 + a11*b01*c12 + a11*b02*c22 + a11*b10*c01 + a11*b10*c02 + a11*b11*c11 + a11*b11*c12 + a11*b12*c21 + a11*b12*c22"
+}
+restricted_mm {
+  index: 20
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  restriction {
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[11,00,01]"
+  }
+  tensor: "a00*b00*c00 + a00*b01*c10 + a00*b02*c20 + a00*b10*c02 + a00*b11*c12 + a00*b12*c22 + a01*b00*c01 + a01*b01*c11 + a01*b02*c21 + a01*b10*c00 + a01*b10*c02 + a01*b11*c10 + a01*b11*c12 + a01*b12*c20 + a01*b12*c22 + a11*b00*c02 + a11*b01*c12 + a11*b02*c22 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21"
+}
+restricted_mm {
+  index: 21
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  tensor: "a10*b00*c01 + a10*b01*c11 + a10*b02*c21 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 22
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  tensor: "a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 23
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  tensor: "a01*b00*c01 + a01*b01*c11 + a01*b02*c21 + a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 24
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[00,01,00]"
+  }
+  tensor: "a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a10*b00*c01 + a10*b01*c11 + a10*b02*c21 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 25
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  tensor: "a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a10*b00*c01 + a10*b01*c11 + a10*b02*c21 + a11*b00*c02 + a11*b01*c12 + a11*b02*c22 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 26
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 1
+    a: 1
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[11,01,00]"
+  }
+  tensor: "a00*b00*c00 + a00*b01*c10 + a00*b02*c20 + a00*b10*c01 + a00*b11*c11 + a00*b12*c21 + a01*b00*c01 + a01*b01*c11 + a01*b02*c21 + a01*b10*c00 + a01*b10*c01 + a01*b11*c10 + a01*b11*c11 + a01*b12*c20 + a01*b12*c21 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 27
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  tensor: "a00*b00*c00 + a00*b01*c10 + a00*b02*c20 + a01*b00*c01 + a01*b01*c11 + a01*b02*c21 + a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a11*b00*c02 + a11*b01*c12 + a11*b02*c22 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 28
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  tensor: "a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a10*b00*c01 + a10*b01*c11 + a10*b02*c21 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 29
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  tensor: "a00*b00*c00 + a00*b01*c10 + a00*b02*c20 + a01*b00*c01 + a01*b01*c11 + a01*b02*c21 + a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}
+restricted_mm {
+  index: 30
+  n0: 3
+  n1: 2
+  n2: 3
+  p: 2
+  tensor: "a00*b00*c00 + a00*b01*c10 + a00*b02*c20 + a01*b10*c00 + a01*b11*c10 + a01*b12*c20 + a10*b00*c01 + a10*b01*c11 + a10*b02*c21 + a11*b10*c01 + a11*b11*c11 + a11*b12*c21 + a20*b00*c02 + a20*b01*c12 + a20*b02*c22 + a21*b10*c02 + a21*b11*c12 + a21*b12*c22"
+}

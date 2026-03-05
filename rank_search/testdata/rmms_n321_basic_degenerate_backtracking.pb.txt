@@ -1,0 +1,1244 @@
+restricted_mm {
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[00,01,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    text: "[00,00,10]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "0"
+  rank_lower_bound: 0
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 1
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[00,01,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    text: "[00,00,10]"
+  }
+  tensor: "a21*b10*c02"
+  rank_lower_bound: 1
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 2
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "a11*b00*c02 + a11*b10*c01"
+  rank_lower_bound: 2
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 3
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[00,01,00]"
+  }
+  tensor: "a20*b00*c02 + a21*b10*c02"
+  rank_lower_bound: 2
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 4
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    text: "[00,00,10]"
+  }
+  tensor: "a11*b10*c01 + a21*b10*c02"
+  rank_lower_bound: 2
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 5
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  tensor: "a11*b00*c02 + a11*b10*c01 + a21*b10*c02"
+  rank_lower_bound: 3
+  rank_lower_bound_proof {
+    forced_product_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 6
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "a11*b10*c01 + a20*b00*c02"
+  rank_lower_bound: 2
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 7
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 1
+    text: "[00,11,01]"
+  }
+  tensor: "a10*b00*c01 + a10*b10*c02 + a11*b00*c02 + a11*b10*c01 + a11*b10*c02"
+  rank_lower_bound: 3
+  rank_lower_bound_proof {
+    backtracking_proof {
+      proof_size: 3
+    }
+  }
+}
+restricted_mm {
+  index: 8
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    text: "[01,00,10]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "a01*b00*c02 + a01*b10*c00 + a11*b10*c01"
+  rank_lower_bound: 3
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 9
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "a01*b00*c01 + a01*b10*c00 + a11*b00*c02 + a11*b10*c01"
+  rank_lower_bound: 3
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 10
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  tensor: "a11*b10*c01 + a20*b00*c02 + a21*b10*c02"
+  rank_lower_bound: 3
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 11
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  tensor: "a10*b00*c01 + a11*b00*c02 + a11*b10*c01 + a21*b10*c02"
+  rank_lower_bound: 3
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 12
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    text: "[00,00,10]"
+  }
+  tensor: "a01*b10*c00 + a11*b10*c01 + a21*b10*c02"
+  rank_lower_bound: 3
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 13
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    text: "[01,00,10]"
+  }
+  tensor: "a01*b00*c02 + a01*b10*c00 + a11*b10*c01 + a21*b10*c02"
+  rank_lower_bound: 4
+  rank_lower_bound_proof {
+    forced_product_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 14
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "a01*b10*c00 + a11*b10*c01 + a20*b00*c02"
+  rank_lower_bound: 3
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 15
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[00,01,00]"
+  }
+  tensor: "a01*b00*c01 + a01*b10*c00 + a20*b00*c02 + a21*b10*c02"
+  rank_lower_bound: 4
+  rank_lower_bound_proof {
+    forced_product_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 16
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  tensor: "a01*b00*c01 + a01*b10*c00 + a11*b00*c02 + a11*b10*c01 + a21*b10*c02"
+  rank_lower_bound: 4
+  rank_lower_bound_proof {
+    forced_product_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 17
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[00,00,01]"
+  }
+  tensor: "a01*b00*c01 + a01*b10*c00 + a11*b10*c01 + a20*b00*c02"
+  rank_lower_bound: 4
+  rank_lower_bound_proof {
+    forced_product_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 18
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[00,01,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    text: "[00,00,11]"
+  }
+  tensor: "a01*b10*c00 + a10*b00*c01 + a20*b00*c02 + a20*b10*c02"
+  rank_lower_bound: 3
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 19
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 1
+    text: "[00,11,01]"
+  }
+  tensor: "a01*b10*c00 + a10*b00*c01 + a10*b10*c02 + a11*b00*c02 + a11*b10*c01 + a11*b10*c02"
+  rank_lower_bound: 4
+  rank_lower_bound_proof {
+    backtracking_proof {
+      proof_size: 7
+    }
+  }
+}
+restricted_mm {
+  index: 20
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  restriction {
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    text: "[11,00,01]"
+  }
+  tensor: "a00*b00*c00 + a00*b10*c02 + a01*b00*c01 + a01*b10*c00 + a01*b10*c02 + a11*b00*c02 + a11*b10*c01"
+  rank_lower_bound: 4
+  rank_lower_bound_proof {
+    backtracking_proof {
+      proof_size: 7
+    }
+  }
+}
+restricted_mm {
+  index: 21
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,00,00]"
+  }
+  tensor: "a10*b00*c01 + a11*b10*c01 + a20*b00*c02 + a21*b10*c02"
+  rank_lower_bound: 4
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 22
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[00,10,00]"
+  }
+  tensor: "a01*b10*c00 + a11*b10*c01 + a20*b00*c02 + a21*b10*c02"
+  rank_lower_bound: 4
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 23
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  tensor: "a01*b00*c01 + a01*b10*c00 + a11*b10*c01 + a20*b00*c02 + a21*b10*c02"
+  rank_lower_bound: 5
+  rank_lower_bound_proof {
+    forced_product_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 24
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[00,01,00]"
+  }
+  tensor: "a01*b10*c00 + a10*b00*c01 + a20*b00*c02 + a21*b10*c02"
+  rank_lower_bound: 4
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 25
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  tensor: "a01*b10*c00 + a10*b00*c01 + a11*b00*c02 + a11*b10*c01 + a21*b10*c02"
+  rank_lower_bound: 4
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 26
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 1
+    a: 1
+    a: 0
+    a: 1
+    a: 0
+    a: 0
+    text: "[11,01,00]"
+  }
+  tensor: "a00*b00*c00 + a00*b10*c01 + a01*b00*c01 + a01*b10*c00 + a01*b10*c01 + a20*b00*c02 + a21*b10*c02"
+  rank_lower_bound: 5
+  rank_lower_bound_proof {
+    backtracking_proof {
+      proof_size: 15
+    }
+  }
+}
+restricted_mm {
+  index: 27
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  restriction {
+    a: 0
+    a: 0
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    text: "[00,01,10]"
+  }
+  tensor: "a00*b00*c00 + a01*b00*c01 + a01*b10*c00 + a11*b00*c02 + a11*b10*c01 + a21*b10*c02"
+  rank_lower_bound: 5
+  rank_lower_bound_proof {
+    backtracking_proof {
+      proof_size: 20
+    }
+  }
+}
+restricted_mm {
+  index: 28
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    a: 0
+    text: "[10,00,00]"
+  }
+  tensor: "a01*b10*c00 + a10*b00*c01 + a11*b10*c01 + a20*b00*c02 + a21*b10*c02"
+  rank_lower_bound: 5
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 29
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  restriction {
+    a: 0
+    a: 1
+    a: 1
+    a: 0
+    a: 0
+    a: 0
+    text: "[01,10,00]"
+  }
+  tensor: "a00*b00*c00 + a01*b00*c01 + a01*b10*c00 + a11*b10*c01 + a20*b00*c02 + a21*b10*c02"
+  rank_lower_bound: 5
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
+restricted_mm {
+  index: 30
+  n0: 3
+  n1: 2
+  n2: 1
+  p: 2
+  tensor: "a00*b00*c00 + a01*b10*c00 + a10*b00*c01 + a11*b10*c01 + a20*b00*c02 + a21*b10*c02"
+  rank_lower_bound: 6
+  rank_lower_bound_proof {
+    flatten_matrix_proof {
+    }
+  }
+}
