@@ -135,9 +135,6 @@ private:
     if (rank_lower_bound_child <= known_rank_lower_bound_) {
       return {0, {}};
     }
-    if (proof_size >= 1'000'000) {
-      LOG(INFO) << "Large proof: " << proof_size << " " << proof_path_;
-    }
     BacktrackingProof proof;
     proof.Reserve(proof_size);
     for (const auto &rank_and_proof : rank_and_proof_list) {
@@ -162,7 +159,6 @@ private:
     constexpr size_t max_map_size = 10'000'000;
     if (local_map->size() >= max_map_size) {
       // delete half of the elements to avoid OOM
-      LOG(INFO) << "Trimming restrictions_to_rank_lower_bound map";
       unsigned int bit = local_map->size() & 1;
       for (auto it = local_map->begin(); it != local_map->end();) {
         if (bit == 0) {
