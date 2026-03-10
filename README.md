@@ -2,7 +2,7 @@
 
 We introduce a new method for proving bilinear complexity lower bounds for matrix multiplication over finite fields. The approach combines the substitution method with a systematic backtracking search over linear restrictions on the first matrix $A$ in the product $AB = C^T$. We enumerate restriction classes up to symmetry; for each class we either obtain a rank lower bound by classical arguments or branch further via the substitution method. The search is organized by dynamic programming on the restricted matrix $A$. As an application we prove that the bilinear complexity of multiplying two $3 \times 3$ matrices over $\mathbb{F}_2$ is at least $20$, improving the longstanding lower bound of $19$ (Bläser 2003). The proof is found automatically within 1.5 hours on a laptop and verified in seconds.
 
-For details, see out [paper](paper/main.pdf).
+For details, see out [paper](https://arxiv.org/abs/2603.07280).
 
 ## Results
 
@@ -26,3 +26,16 @@ bazel bulid -c opt //...
 To verify the proof, see [proof_verifier/README.md](proof_verifier/README.md).
 
 To understand how we discover the rank lower bound and construct the proof, see [rank_search/README.md](rank_search/README.md).
+
+## Citation
+```bibtex
+@misc{wang2026complexitylowerboundssmall,
+      title={Complexity Lower Bounds of Small Matrix Multiplication over Finite Fields via Backtracking and Substitution}, 
+      author={Chengu Wang},
+      year={2026},
+      eprint={2603.07280},
+      archivePrefix={arXiv},
+      primaryClass={cs.CC},
+      url={https://arxiv.org/abs/2603.07280}, 
+}
+```
