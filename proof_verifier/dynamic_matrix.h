@@ -9,8 +9,8 @@
 class DynamicMatrix {
 public:
   DynamicMatrix(int n, int m);
-  template <size_t n, size_t M>
-  explicit DynamicMatrix(const std::array<std::array<uint8_t, M>, n> &data);
+  template <size_t n, size_t m>
+  explicit DynamicMatrix(const std::array<std::array<uint8_t, m>, n> &data);
 
   void ResizeRows(int n);
 
@@ -38,11 +38,11 @@ private:
   std::vector<uint8_t> data_;
 };
 
-template <size_t n, size_t M>
-DynamicMatrix::DynamicMatrix(const std::array<std::array<uint8_t, M>, n> &data)
-    : n_(n), m_(M), data_(n * M) {
+template <size_t n, size_t m>
+DynamicMatrix::DynamicMatrix(const std::array<std::array<uint8_t, m>, n> &data)
+    : n_(n), m_(m), data_(n * m) {
   for (size_t i = 0; i < n; ++i) {
-    for (size_t j = 0; j < M; ++j) {
+    for (size_t j = 0; j < m; ++j) {
       (*this)(static_cast<int>(i), static_cast<int>(j)) = data[i][j];
     }
   }
