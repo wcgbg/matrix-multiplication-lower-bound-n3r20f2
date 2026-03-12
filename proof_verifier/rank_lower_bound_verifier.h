@@ -181,6 +181,6 @@ void VerifyRankLowerBound(const pb::RestrictedMMCollection &collection,
       collection.restricted_mm(collection.restricted_mm_size() - 1);
   CHECK_EQ(last_rmm.restriction_size(), 0);
   LOG(INFO) << std::format("Verified. The rank lower bound for {}x{}x{} matrix "
-                           "multiplication tensor is {}.",
+                           "multiplication tensor is {} over F_2.",
                            n0, n1, n2, last_rmm.rank_lower_bound());
 }

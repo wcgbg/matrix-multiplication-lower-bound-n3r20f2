@@ -49,6 +49,8 @@ message RestrictedMM {
   string tensor = 7;
   optional int32 rank_lower_bound = 8;
   RankLowerBoundProof rank_lower_bound_proof = 9;
+  optional int32 rank_upper_bound = 10;
+  string rank_upper_bound_proof = 11;
 }
 
 message RestrictedMMCollection {

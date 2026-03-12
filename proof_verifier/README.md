@@ -23,7 +23,7 @@ It should take about 10 seconds.
 On success, the output will end with a line of the form:
 
 ```text
-Verified. The rank lower bound for 3x3x3 matrix multiplication tensor is 20.
+Verified. The rank lower bound for 3x3x3 matrix multiplication tensor is 20 over F_2.
 ```
 
 ## Verifying other proofs

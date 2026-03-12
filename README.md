@@ -10,7 +10,11 @@ $\mathbf{R}(\langle 3,3,3\rangle) \ge 20$ over $\mathbb{F}_2$, i.e. the tensor r
 
 $\mathbf{R}(\langle 2,3,4\rangle) \ge 19$ over $\mathbb{F}_2$. It completes the missing proof in [HK71](https://epubs.siam.org/doi/abs/10.1137/0120004).
 
+$\mathbf{R}(\langle 3,3,4\rangle) \ge 25$ over $\mathbb{F}_2$.
+
 ## Build
+
+This Git repository requires [LFS](https://git-lfs.com/). Install it before `git clone`.
 
 We use Bazel (via Bazelisk) to build the project. First, install Bazelisk from `https://github.com/bazelbuild/bazelisk`.
 

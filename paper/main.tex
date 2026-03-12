@@ -56,13 +56,16 @@ That is, any bilinear algorithm for multiplying two $3 \times 3$ matrices over $
 
 This improves the previous lower bound of 19 by Bl{\"a}ser 2003 \cite{blaser2003complexity}.
 
-
 We also complete the proof of $\mathbf{R}(\langle 2,3,4\rangle)\ge 19$, which was skipped in Hopcroft and Kerr 1971 \cite{hopcroft1971minimizing}.
 \begin{theorem}
   $\mathbf{R}(\langle 2,3,4\rangle)\ge 19$ over $\mathbb{F}_2$.
 \end{theorem}
 
-Futhermore, we reproduce the lower bounds for several other matrix sizes.
+We further obtain the following lower bound for multiplying a $3 \times 3$ matrix by a $3 \times 4$ matrix over $\mathbb{F}_2$.
+\begin{theorem}
+  $\mathbf{R}(\langle 3,3,4\rangle)\ge 25$ over $\mathbb{F}_2$.
+\end{theorem}
+
 The table below summarizes the tensor rank lower and upper bounds over $\mathbb{F}_2$.
 
 \begin{center}
@@ -75,6 +78,7 @@ The table below summarizes the tensor rank lower and upper bounds over $\mathbb{
     $2 \times 3 \times 3$ & 15 \cite{hopcroft1971minimizing}                             & 15           & 15 \cite{hopcroft1971minimizing}                                               \\
     $2 \times 3 \times 4$ & 18 \cite{blaser1999lower}, 19? \cite{hopcroft1971minimizing} & $\boxed{19}$ & 20 \cite{hopcroft1971minimizing}                                               \\
     $3 \times 3 \times 3$ & 19 \cite{blaser2003complexity}                               & $\boxed{20}$ & 23 \cite{laderman1976noncommutative}                                           \\
+    $3 \times 3 \times 4$ & 24 \cite{blaser2003complexity}                               & $\boxed{25}$ & 29 \cite{smirnov2013bilinear}                                                  \\
   \end{tabular}
 \end{center}
 
@@ -484,7 +488,7 @@ The restriction map is faster, but it still needs to enumerate all the $P$s.
 So, we build a local cache in each thread for each orbit: a hash map from \textit{sub\_factors} to the lower bound for that sub-list.
 In some cases, the local cache still grows too large.
 So, when the local cache is getting larger than some threshold, we randomly delete half of the elements to avoid OOM.
-In practice, the threshold is set to $10^7$.
+In practice, the threshold is set to $3\times 10^6$.
 
 \subsubsection{Optimization: Incremental Target Lower Bound}
 We set the target lower bound to the best-known rank lower bound plus one.
@@ -519,13 +523,18 @@ With step limit $10^7$, our program takes 71 minutes to find the proof on a MacB
 
 The proof is about 32\,MiB. It can be verified on the same computer within 10 seconds.
 
-
 \subsection{$\mathbf{R}(\langle 2,3,4\rangle)\ge 19$ over $\mathbb{F}_2$}
 Our program actually proves $\mathbf{R}(\langle 3,2,4\rangle)\ge 19$ over $\mathbb{F}_2$.
 The step limit is $10^7$.
 It takes 110 minutes to find the proof on a MacBook Air M4 with 8 cores and 16 GB memory.
 
 The proof is under 100\,KiB and can be verified on the same computer in 110 minutes. Although verification takes as long as the search, it remains useful: the verifier program is shorter than the search program and is therefore easier to audit for correctness.
+
+
+\subsection{$\mathbf{R}(\langle 3,3,4\rangle)\ge 25$ over $\mathbb{F}_2$}
+With step limit $10^8$, our program takes 3.5 days to find the proof on the cloud server with 64 CPU cores and 128 GB memory. It costs about 168 USD.
+
+The proof is about 626\,MiB. It can be verified on the same computer within 3.5 hours, which costs about 7 USD.
 
 \subsection{Implementation}
 
