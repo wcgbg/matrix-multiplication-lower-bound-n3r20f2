@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 
 write_dimention_h() {
@@ -22,19 +21,37 @@ if [[ ! -d proof ]]; then
     exit 1
 fi
 
-if [[ $# -ne 1 ]]; then
-    echo "Usage: $0 proof/rmms_nXYZ.pb.txt"
+if [[ $# -ne 1 && $# -ne 2 ]]; then
+    echo "Usage: $0 [--use-gpu] proof/rmms_nXYZ.pb.txt"
     exit 1
 fi
 
-if [[ ! -f $1 ]]; then
-    echo "File $1 does not exist."
+if [[ $1 == "--use-gpu" || $1 == "--use_gpu" ]]; then
+    use_gpu=1
+    proof_file=$2
+else
+    use_gpu=0
+    proof_file=$1
+fi
+
+if [[ ! -f ${proof_file} ]]; then
+    echo "File ${proof_file} does not exist."
     exit 1
 fi
 
-echo "Verifying $1..."
+if [[ ${proof_file} == *".gz" ]]; then
+    echo "File ${proof_file} is a gzipped file. Please uncompress it first."
+    exit 1
+fi
 
-write_dimention_h $1
+echo "Verifying ${proof_file}..."
 
-bazel build -c opt //proof_verifier:rank_lower_bound_verifier_main
-bazel-bin/proof_verifier/rank_lower_bound_verifier_main $1
+write_dimention_h ${proof_file}
+
+if [[ ${use_gpu} == 1 ]]; then
+    bazel build -c opt --define=use_gpu=1 //proof_verifier:rank_lower_bound_verifier_main
+else
+    bazel build -c opt //proof_verifier:rank_lower_bound_verifier_main
+fi
+
+bazel-bin/proof_verifier/rank_lower_bound_verifier_main ${proof_file}

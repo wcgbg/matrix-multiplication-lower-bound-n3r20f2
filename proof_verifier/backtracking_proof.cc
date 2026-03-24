@@ -27,12 +27,13 @@ std::string GetBacktrackingProofPath(const std::string &bt_proof_root_dir,
   if (bt_proof_root_dir.empty()) {
     return {};
   }
-  CHECK_LT(index, 1'000);
+  CHECK_LT(index, 1'000'000);
+  std::string dir = std::format("{}/{:03}", bt_proof_root_dir, index / 1000);
   if (create_dir) {
-    std::filesystem::create_directories(bt_proof_root_dir);
+    std::filesystem::create_directories(dir);
   }
   // btp is for backtracking proof
-  return std::format("{}/{:03}.btp", bt_proof_root_dir, index);
+  return std::format("{}/{:03}.btp", dir, index % 1000);
 }
 
 void BacktrackingProof::Save(const std::string &path) const {

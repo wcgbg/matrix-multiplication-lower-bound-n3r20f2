@@ -72,3 +72,18 @@ TEST(BacktrackingProofTest, AppendOther) {
   EXPECT_EQ(a.gl_right_array[1], 4);
   EXPECT_EQ(a.gl_right_array[2], 6);
 }
+
+TEST(BacktrackingProofTest, GetBacktrackingProofRootDir) {
+  EXPECT_EQ(GetBacktrackingProofRootDir("rmms_n223.pb.txt"),
+            "rmms_n223_bt_proof");
+  EXPECT_EQ(GetBacktrackingProofRootDir("proof/rmms_n344.pb"),
+            "proof/rmms_n344_bt_proof");
+}
+
+TEST(BacktrackingProofTest, GetBacktrackingProofPath) {
+  EXPECT_EQ(GetBacktrackingProofPath("", 1234), "");
+
+  const std::string root = "proof/rmms_n344_bt_proof";
+  const std::string path = GetBacktrackingProofPath(root, 12345, false);
+  EXPECT_EQ(path, "proof/rmms_n344_bt_proof/012/345.btp");
+}

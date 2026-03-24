@@ -208,6 +208,8 @@
     "https://bcr.bazel.build/modules/rules_cc/0.2.0/MODULE.bazel": "b5c17f90458caae90d2ccd114c81970062946f49f355610ed89bebf954f5783c",
     "https://bcr.bazel.build/modules/rules_cc/0.2.13/MODULE.bazel": "eecdd666eda6be16a8d9dc15e44b5c75133405e820f620a234acc4b1fdc5aa37",
     "https://bcr.bazel.build/modules/rules_cc/0.2.13/source.json": "f872e892c5265c5532e526857532f4868708f88d64e5ebe517ea72e09da61bdb",
+    "https://bcr.bazel.build/modules/rules_cuda/0.2.5/MODULE.bazel": "d06bba2b7b0aae2877306e91166c050b15a4928d6f5f7394b380e731fa270b22",
+    "https://bcr.bazel.build/modules/rules_cuda/0.2.5/source.json": "edb57bf6be69c46d3eed6638b7111b8c5628846549b41f5bc1646f9c979ea902",
     "https://bcr.bazel.build/modules/rules_foreign_cc/0.9.0/MODULE.bazel": "c9e8c682bf75b0e7c704166d79b599f93b72cfca5ad7477df596947891feeef6",
     "https://bcr.bazel.build/modules/rules_fuzzing/0.5.2/MODULE.bazel": "40c97d1144356f52905566c55811f13b299453a14ac7769dfba2ac38192337a8",
     "https://bcr.bazel.build/modules/rules_java/4.0.0/MODULE.bazel": "5a78a7ae82cd1a33cef56dc578c7d2a46ed0dca12643ee45edbb8417899e6f74",
@@ -314,6 +316,30 @@
             "bazel_tools",
             "rules_cc",
             "rules_cc+"
+          ]
+        ]
+      }
+    },
+    "@@rules_cuda+//cuda:extensions.bzl%toolchain": {
+      "general": {
+        "bzlTransitiveDigest": "YQtbwSN8/dmvas0dUC3HRR7J4DaW6QF0YA0SZPEglhk=",
+        "usagesDigest": "4/SykxCe4U9iHNo1kDEPK/mB5DgOwrhPYqJrPUmBH7A=",
+        "recordedFileInputs": {},
+        "recordedDirentsInputs": {},
+        "envVariables": {},
+        "generatedRepoSpecs": {
+          "local_cuda": {
+            "repoRuleId": "@@rules_cuda+//cuda/private:repositories.bzl%local_cuda",
+            "attributes": {
+              "toolkit_path": ""
+            }
+          }
+        },
+        "recordedRepoMappingEntries": [
+          [
+            "rules_cuda+",
+            "bazel_tools",
+            "bazel_tools"
           ]
         ]
       }

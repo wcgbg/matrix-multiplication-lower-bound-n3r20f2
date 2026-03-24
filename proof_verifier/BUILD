@@ -1,9 +1,16 @@
 load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
 load("@protobuf//bazel:py_proto_library.bzl", "py_proto_library")
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
+load("@rules_cuda//cuda:defs.bzl", "cuda_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
 package(default_visibility = ["//visibility:public"])
+
+# When --define=use_gpu=1 is set, use CUDA backend; otherwise use stub (CPU-only).
+config_setting(
+    name = "use_cuda",
+    define_values = {"use_gpu": "1"},
+)
 
 proto_library(
     name = "restricted_mm_proto",
@@ -134,14 +141,73 @@ cc_test(
     ],
 )
 
+cuda_library(
+    name = "rank_lower_bound_gpu_cuda",
+    srcs = ["rank_lower_bound_gpu_cuda.cu"],
+    hdrs = ["rank_lower_bound_gpu.h"],
+    # copts = ["-Wno-deprecated-gpu-targets"],
+    deps = [
+        ":tensor",
+    ],
+)
+
+cc_library(
+    name = "rank_lower_bound_gpu",
+    srcs = select({
+        ":use_cuda": [],
+        "//conditions:default": ["rank_lower_bound_gpu_stub.cc"],
+    }),
+    hdrs = ["rank_lower_bound_gpu.h"],
+    deps = select({
+        ":use_cuda": [
+            ":rank_lower_bound_gpu_cuda",
+            ":tensor",
+        ],
+        "//conditions:default": [":tensor"],
+    }),
+)
+
 cc_library(
     name = "rank_lower_bound_basic_technics",
     hdrs = ["rank_lower_bound_basic_technics.h"],
     deps = [
         ":dynamic_matrix",
+        ":rank_lower_bound_gpu",
         ":tensor",
         "@ng-log//:ng-log",
         "@onetbb//:tbb",
+    ],
+)
+
+cc_test(
+    name = "rank_lower_bound_basic_technics_test",
+    srcs = ["rank_lower_bound_basic_technics_test.cc"],
+    deps = [
+        ":dynamic_matrix",
+        ":rank_lower_bound_basic_technics",
+        ":tensor",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_binary(
+    name = "rank_lower_bound_foreced_product_benchmark_432_main",
+    srcs = ["rank_lower_bound_foreced_product_benchmark_432_main.cc"],
+    deps = [
+        ":rank_lower_bound_basic_technics",
+        ":tensor",
+        "@ng-log//:ng-log",
+    ],
+)
+
+cc_binary(
+    name = "rank_lower_bound_foreced_product_benchmark_443_main",
+    srcs = ["rank_lower_bound_foreced_product_benchmark_443_main.cc"],
+    deps = [
+        ":rank_lower_bound_basic_technics",
+        ":tensor",
+        "@ng-log//:ng-log",
     ],
 )
 

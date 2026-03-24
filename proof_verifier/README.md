@@ -30,7 +30,9 @@ Verified. The rank lower bound for 3x3x3 matrix multiplication tensor is 20 over
 
 Run
 ```
-./proof_verifier/verify.sh proof/rmms_nXYZ.pb.txt
+./proof_verifier/verify.sh [--use-gpu] proof/rmms_nXYZ.pb.txt
 ```
 
 It change the matrix size in `proof_verifier/dimension.h` before running `rank_lower_bound_verifier_main`. 
+
+`rmms_n344.pb.txt` is too large. So, it is compressed. Please `gunzip proof/rmms_n344.pb.txt.gz` before verifing the proof.

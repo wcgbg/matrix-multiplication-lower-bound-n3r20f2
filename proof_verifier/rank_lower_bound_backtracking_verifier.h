@@ -71,7 +71,7 @@ private:
       uint16_t gl_left = proof_.gl_left_array[*proof_index];
       uint16_t gl_right = proof_.gl_right_array[*proof_index];
       Restrictions<n0, n1> extended_restrictions = base_restrictions_;
-      for (int i = 0; i < dfs_restrictions->size(); ++i) {
+      for (int i = 0; i < static_cast<int>(dfs_restrictions->size()); ++i) {
         if (mask & (uint32_t(1) << i)) {
           extended_restrictions.push_back((*dfs_restrictions)[i]);
         }
@@ -91,7 +91,7 @@ private:
           << RestrictionsToString<n0, n1>(extended_restrictions)
           << ", transformed_restrictions="
           << RestrictionsToString<n0, n1>(transformed_restrictions);
-      uint32_t rank_lower_bound = std::popcount(mask) + it->second;
+      int rank_lower_bound = std::popcount(mask) + it->second;
       CHECK_LE(rank_lower_bound_, rank_lower_bound);
       (*proof_index)++;
       return;

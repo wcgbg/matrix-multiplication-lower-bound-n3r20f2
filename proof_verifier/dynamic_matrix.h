@@ -30,6 +30,8 @@ public:
   int rows() const { return n_; }
   int cols() const { return m_; }
 
+  const uint8_t *data() const { return data_.data(); }
+
 private:
   int Index(int i, int j) const { return i * m_ + j; }
 

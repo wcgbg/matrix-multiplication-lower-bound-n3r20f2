@@ -127,11 +127,6 @@ std::tuple<int, pb::RankLowerBoundProof, std::string> ProcessRestrictedMM(
   CHECK_EQ(rmm.n2(), n2);
   CHECK_EQ(rmm.p(), 2);
 
-  // if (rmm.index() == 6) {
-  //   LOG(INFO) << rmm.DebugString();
-  //   LOG(INFO);
-  // }
-
   int rank_lower_bound =
       rmm.has_rank_lower_bound() ? rmm.rank_lower_bound() : -1;
   pb::RankLowerBoundProof rank_lower_bound_proof;

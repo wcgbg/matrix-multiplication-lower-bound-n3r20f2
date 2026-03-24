@@ -5,6 +5,7 @@
 \usepackage{amsthm}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{footmisc}
 \usepackage{url}
 
 \newtheorem{lemma}{Lemma}
@@ -61,9 +62,12 @@ We also complete the proof of $\mathbf{R}(\langle 2,3,4\rangle)\ge 19$, which wa
   $\mathbf{R}(\langle 2,3,4\rangle)\ge 19$ over $\mathbb{F}_2$.
 \end{theorem}
 
-We further obtain the following lower bound for multiplying a $3 \times 3$ matrix by a $3 \times 4$ matrix over $\mathbb{F}_2$.
+We further obtain the more lower bound for multiplying larger matrices over $\mathbb{F}_2$.
 \begin{theorem}
   $\mathbf{R}(\langle 3,3,4\rangle)\ge 25$ over $\mathbb{F}_2$.
+\end{theorem}
+\begin{theorem}
+  $\mathbf{R}(\langle 3,4,4\rangle)\ge 29$ over $\mathbb{F}_2$.
 \end{theorem}
 
 The table below summarizes the tensor rank lower and upper bounds over $\mathbb{F}_2$.
@@ -79,10 +83,11 @@ The table below summarizes the tensor rank lower and upper bounds over $\mathbb{
     $2 \times 3 \times 4$ & 18 \cite{blaser1999lower}, 19? \cite{hopcroft1971minimizing} & $\boxed{19}$ & 20 \cite{hopcroft1971minimizing}                                               \\
     $3 \times 3 \times 3$ & 19 \cite{blaser2003complexity}                               & $\boxed{20}$ & 23 \cite{laderman1976noncommutative}                                           \\
     $3 \times 3 \times 4$ & 24 \cite{blaser2003complexity}                               & $\boxed{25}$ & 29 \cite{smirnov2013bilinear}                                                  \\
+    $3 \times 4 \times 4$ & 28 \cite{blaser1999lower}                                    & $\boxed{29}$ & 38 \cite{smirnov2013bilinear}                                                  \\
   \end{tabular}
 \end{center}
 
-The whole paper talks about the $\mathbb{F}_2$ case. The same techniques can be applied to other finite fields, but the running time will be much longer.
+The whole paper talks about the $\mathbb{F}_2$ case. The same techniques can be applied to other finite fields.
 
 \section{Preliminaries}
 \subsection{Symmetries}
@@ -528,13 +533,26 @@ Our program actually proves $\mathbf{R}(\langle 3,2,4\rangle)\ge 19$ over $\math
 The step limit is $10^7$.
 It takes 110 minutes to find the proof on a MacBook Air M4 with 8 cores and 16 GB memory.
 
-The proof is under 100\,KiB and can be verified on the same computer in 110 minutes. Although verification takes as long as the search, it remains useful: the verifier program is shorter than the search program and is therefore easier to audit for correctness.
+The proof is under 100\,KiB and can be verified on the same computer in 110 minutes.
+Although verification takes as long as the search, it remains useful:
+the verifier program is shorter than the search program and is therefore easier to audit for correctness.
+It can also be verified with NVIDIA L20 GPU in a minute.
 
 
 \subsection{$\mathbf{R}(\langle 3,3,4\rangle)\ge 25$ over $\mathbb{F}_2$}
-With step limit $10^8$, our program takes 3.5 days to find the proof on the cloud server with 64 CPU cores and 128 GB memory. It costs about 168 USD.
+With step limit $10^8$, our program takes 3.5 days to find the proof on the cloud server with 64 CPU cores and 128 GB memory. It costs about 168 USD~\footnote{Alibaba Cloud. Elastic Compute Service. ecs.c9ae.16xlarge. AMD EPYC 9T95.\label{fn:ecs-c9ae-16xlarge}}.
 
-The proof is about 626\,MiB. It can be verified on the same computer within 3.5 hours, which costs about 7 USD.
+The proof is about 626\,MiB. It can be verified on the same computer within 3.5 hours
+(7 USD~\footref{fn:ecs-c9ae-16xlarge}),
+or on NVIDIA L20 GPU in 32 minutes
+(1.3 USD~\footnote{Alibaba Cloud. Elastic Compute Service. ecs.gn8is.4xlarge.\label{fn:ecs-gn8is}}).
+
+\subsection{$\mathbf{R}(\langle 3,4,4\rangle)\ge 29$ over $\mathbb{F}_2$}
+With step limit $8\times 10^5$, our program takes about 7 hours to find the proof on the cloud server with 192 CPU cores and 384 GB memory.
+It costs about 42 USD~\footnote{Alibaba Cloud. Elastic Compute Service. ecs.c9ae.48xlarge. AMD EPYC 9T95.\label{fn:ecs-c9ae-48xlarge}}.
+
+The proof is about 2\,GiB. It can be verified on the same computer in about 3.3 hours (20 USD~\footref{fn:ecs-c9ae-48xlarge}),
+or on NVIDIA L20 GPU in about 2.5 hours (5.4 USD~\footref{fn:ecs-gn8is}).
 
 \subsection{Implementation}
 

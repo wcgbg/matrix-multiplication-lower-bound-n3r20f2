@@ -16,6 +16,7 @@ using Tensor =
 
 template <int n> using SquareTensor = Tensor<n, n, n>;
 
+#ifndef __NVCC__
 template <int n0, int n1, int n2>
 std::string TensorToSparseString(const Tensor<n0, n1, n2> &tensor) {
   // Convert a tensor to its sparse string representation, e.g.,
@@ -53,6 +54,7 @@ std::string TensorToSparseString(const Tensor<n0, n1, n2> &tensor) {
   }
   return oss.str();
 }
+#endif
 
 template <int n0, int n1, int n2>
 std::string TensorToDenseString(const Tensor<n0, n1, n2> &tensor) {
@@ -88,7 +90,7 @@ Tensor<n0, n1, n2> SparseStringToTensor(const std::string &text) {
       CHECK_EQ(term[1], '*');
       term = term.substr(2);
     }
-    CHECK_EQ(term.size(), 11) << term;
+    CHECK_EQ(term.size(), 11u) << term;
     CHECK_EQ(term[0], 'a');
     int ai = term[1] - '0';
     int aj = term[2] - '0';

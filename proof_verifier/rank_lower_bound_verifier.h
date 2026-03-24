@@ -33,7 +33,8 @@ TransformRestrictions(const Restrictions<n0, n1> &restrictions,
 template <int n0, int n1, int n2>
 void VerifyFlattenProof(const Tensor<n0, n1, n2> &tensor,
                         int rank_lower_bound) {
-  int computed = RankLowerBoundFlattenMatrix<n0, n1, n2>(tensor);
+  int computed =
+      RankLowerBoundFlattenMatrix<n0, n1, n2>(tensor, rank_lower_bound);
   CHECK_EQ(computed, rank_lower_bound);
 }
 
@@ -73,14 +74,14 @@ void VerifyDegenerateProof(
   auto transformed = TransformRestrictions<n0, n1, n2>(
       extended, degenerate_proof.transformation());
   int rank = GaussJordanElimination(n0 * n1, &transformed);
-  CHECK_EQ(rank, transformed.size());
+  CHECK_EQ(rank, static_cast<int>(transformed.size()));
   auto it = restrictions_to_rank_lower_bound.find(transformed);
   CHECK(it != restrictions_to_rank_lower_bound.end())
       << "transformed extended restrictions not found in map. restrictions="
       << RestrictionsToString<n0, n1>(restrictions)
       << ", extended=" << RestrictionsToString<n0, n1>(extended)
       << ", transformed=" << RestrictionsToString<n0, n1>(transformed);
-  CHECK_EQ(it->second, rank_lower_bound);
+  CHECK_EQ(static_cast<int>(it->second), rank_lower_bound);
 }
 
 // Verifies BacktrackingProof: loads proof from disk, checks size, and runs
@@ -175,7 +176,7 @@ void VerifyRankLowerBound(const pb::RestrictedMMCollection &collection,
     }
     total_count += rmms.size();
   }
-  CHECK_EQ(total_count, collection.restricted_mm_size());
+  CHECK_EQ(total_count, static_cast<size_t>(collection.restricted_mm_size()));
   CHECK_GT(collection.restricted_mm_size(), 0);
   const auto &last_rmm =
       collection.restricted_mm(collection.restricted_mm_size() - 1);

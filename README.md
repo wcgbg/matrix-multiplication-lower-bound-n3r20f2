@@ -12,6 +12,9 @@ $\mathbf{R}(\langle 2,3,4\rangle) \ge 19$ over $\mathbb{F}_2$. It completes the 
 
 $\mathbf{R}(\langle 3,3,4\rangle) \ge 25$ over $\mathbb{F}_2$.
 
+$\mathbf{R}(\langle 3,4,4\rangle) \ge 29$ over $\mathbb{F}_2$.
+
+
 ## Build
 
 This Git repository requires [LFS](https://git-lfs.com/). Install it before `git clone`.
@@ -20,10 +23,16 @@ We use Bazel (via Bazelisk) to build the project. First, install Bazelisk from `
 
 This project requires C++20 support. If needed, configure your C++ toolchain in the first two lines of `.bazelrc`. If you are using Apple Clang, uncomment lines 7–10 in `.bazelrc`.
 
-To build everything:
+To build all without CUDA:
 ```
-bazel bulid -c opt //...
+bazel build -c opt -- //... -//proof_verifier:rank_lower_bound_gpu_cuda
 ```
+
+To build all with CUDA:
+```
+bazel build -c opt --define=use_gpu=1 //...
+```
+The CUDA build has been tested on Ubuntu 24.04, GCC 14, and CUDA 12.8.
 
 ## Code Layout
 
