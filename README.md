@@ -1,12 +1,12 @@
-# Complexity Lower Bounds of Small Matrix Multiplication over Finite Fields via Backtracking and Substitution
+# Automated Lower Bounds for Small Matrix Multiplication Complexity over Finite Fields
 
-We introduce a new method for proving bilinear complexity lower bounds for matrix multiplication over finite fields. The approach combines the substitution method with a systematic backtracking search over linear restrictions on the first matrix $A$ in the product $AB = C^T$. We enumerate restriction classes up to symmetry; for each class we either obtain a rank lower bound by classical arguments or branch further via the substitution method. The search is organized by dynamic programming on the restricted matrix $A$. As an application we prove that the bilinear complexity of multiplying two $3 \times 3$ matrices over $\mathbb{F}_2$ is at least $20$, improving the longstanding lower bound of $19$ (Bläser 2003). The proof is found automatically within 1.5 hours on a laptop and verified in seconds.
+We develop an automated framework for proving lower bounds on the bilinear complexity of matrix multiplication over finite fields. Our approach systematically combines symmetry reduction, restriction space enumeration, and recursive substitution arguments, culminating in efficiently verifiable proof certificates. Using this framework, we obtain several new lower bounds for various small matrix formats. Most notably, we prove that the bilinear complexity of multiplying two $3 \times 3$ matrices over $\mathbb{F}_2$ is at least $20$, improving upon the longstanding lower bound of $19$ (Bläser 2003). Our computer search discovers this proof in approximately $1.5$ hours on a laptop, and the resulting certificate can be verified in seconds.
 
 For details, see out [paper](https://arxiv.org/abs/2603.07280).
 
 ## Results
 
-$\mathbf{R}(\langle 3,3,3\rangle) \ge 20$ over $\mathbb{F}_2$, i.e. the tensor rank of the matrix multiplication tensor between two $3 \times 3$ matrices is at least 20 over field $\mathbb{F}_2$. It implies that, for multiplying two $3 \times 3$ matrices over the field $\mathbb{F}_2$, any bilinear algorithm must use at least 20 scalar multiplications in $\mathbb{F}_2$. It improves the previous lower bound of 19 in [Bläser03](https://www.sciencedirect.com/science/article/pii/S0885064X02000079).
+$\mathbf{R}(\langle 3,3,3\rangle) \ge 20$ over $\mathbb{F}_2$. The tensor rank of the matrix multiplication tensor for two $3 \times 3$ matrices is at least 20 over $\mathbb{F}_2$; equivalently, any bilinear algorithm for multiplying two $3 \times 3$ matrices over $\mathbb{F}_2$ must use at least 20 scalar multiplications. This improves upon the longstanding lower bound of $19$ established by [Bläser03](https://www.sciencedirect.com/science/article/pii/S0885064X02000079).
 
 $\mathbf{R}(\langle 2,3,4\rangle) \ge 19$ over $\mathbb{F}_2$. It completes the missing proof in [HK71](https://epubs.siam.org/doi/abs/10.1137/0120004).
 
@@ -43,7 +43,7 @@ To understand how we discover the rank lower bound and construct the proof, see 
 ## Citation
 ```bibtex
 @misc{wang2026complexitylowerboundssmall,
-      title={Complexity Lower Bounds of Small Matrix Multiplication over Finite Fields via Backtracking and Substitution}, 
+      title={Automated Lower Bounds for Small Matrix Multiplication Complexity over Finite Fields}, 
       author={Chengu Wang},
       year={2026},
       eprint={2603.07280},

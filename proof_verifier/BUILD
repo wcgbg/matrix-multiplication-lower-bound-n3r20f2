@@ -194,6 +194,7 @@ cc_test(
 cc_binary(
     name = "rank_lower_bound_foreced_product_benchmark_432_main",
     srcs = ["rank_lower_bound_foreced_product_benchmark_432_main.cc"],
+    malloc = "@mimalloc",
     deps = [
         ":rank_lower_bound_basic_technics",
         ":tensor",
@@ -204,6 +205,7 @@ cc_binary(
 cc_binary(
     name = "rank_lower_bound_foreced_product_benchmark_443_main",
     srcs = ["rank_lower_bound_foreced_product_benchmark_443_main.cc"],
+    malloc = "@mimalloc",
     deps = [
         ":rank_lower_bound_basic_technics",
         ":tensor",
@@ -241,6 +243,7 @@ cc_library(
 cc_binary(
     name = "rank_lower_bound_verifier_main",
     srcs = ["rank_lower_bound_verifier_main.cc"],
+    malloc = "@mimalloc",
     deps = [
         ":proto_io",
         ":rank_lower_bound_verifier",

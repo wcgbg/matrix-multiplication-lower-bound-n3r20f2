@@ -7,6 +7,33 @@ load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "restrictions_enumerator_slow",
+    hdrs = ["restrictions_enumerator_slow.h"],
+    deps = [
+        "//proof_verifier:math_utils",
+        "//proof_verifier:restricted_mm_cc_proto",
+        "//proof_verifier:restrictions",
+        "//proof_verifier:static_matrix",
+        "@boost.unordered",
+        "@ng-log//:ng-log",
+        "@onetbb//:tbb",
+    ],
+)
+
+cc_test(
+    name = "restrictions_enumerator_slow_test",
+    srcs = ["restrictions_enumerator_slow_test.cc"],
+    data = glob(["testdata/*"]),
+    deps = [
+        ":restrictions_enumerator_slow",
+        "//proof_verifier:proto_io",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+        "@ng-log//:ng-log",
+    ],
+)
+
+cc_library(
     name = "restrictions_enumerator",
     hdrs = ["restrictions_enumerator.h"],
     deps = [
@@ -20,18 +47,6 @@ cc_library(
     ],
 )
 
-cc_binary(
-    name = "restrictions_enumerator_main",
-    srcs = ["restrictions_enumerator_main.cc"],
-    deps = [
-        ":restrictions_enumerator",
-        "//proof_verifier:dimension",
-        "//proof_verifier:proto_io",
-        "//proof_verifier:restricted_mm_cc_proto",
-        "@ng-log//:ng-log",
-    ],
-)
-
 cc_test(
     name = "restrictions_enumerator_test",
     srcs = ["restrictions_enumerator_test.cc"],
@@ -41,6 +56,20 @@ cc_test(
         "//proof_verifier:proto_io",
         "@googletest//:gtest",
         "@googletest//:gtest_main",
+        "@ng-log//:ng-log",
+    ],
+)
+
+cc_binary(
+    name = "restrictions_enumerator_main",
+    srcs = ["restrictions_enumerator_main.cc"],
+    malloc = "@mimalloc",
+    deps = [
+        ":restrictions_enumerator",
+        ":restrictions_enumerator_slow",
+        "//proof_verifier:dimension",
+        "//proof_verifier:proto_io",
+        "//proof_verifier:restricted_mm_cc_proto",
         "@ng-log//:ng-log",
     ],
 )

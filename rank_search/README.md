@@ -1,6 +1,6 @@
 ## Rank Search
 
-This directory contains the search code that discovers computer-verifiable tensor rank lower bound proofs using the backtracking + substitution framework described in the paper.
+This directory contains the search code that discovers computer-verifiable tensor rank lower bounds.
 
 All commands below should be run from the **repository root** (the directory containing `MODULE.bazel`).
 
