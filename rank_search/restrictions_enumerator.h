@@ -190,10 +190,8 @@ private:
 
   // Returns false if it has been visited.
   bool Visit(const Restrictions<n0, n1> &restrictions) {
-    Restrictions<n0, n1> new_restrictions = restrictions;
-
-    std::vector<Restrictions<n0, n1>> to_insert;
-    to_insert.reserve(full_rank_matrices_n0_.size());
+    Restrictions<n0, n1> new_restrictions;
+    new_restrictions.reserve(restrictions.size());
 
     for (bool transpose : {false, true}) {
       if (n0 != n1 || n1 != n2 || n0 != n2) {
