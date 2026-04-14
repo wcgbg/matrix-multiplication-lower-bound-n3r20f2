@@ -43,7 +43,7 @@ The search has several other useful flags:
 
 - `--backtracking_step_limit`: global limit on the total number of backtracking steps (across all threads)
 - `--rank_lower_bound_min`, `--rank_lower_bound_max`: restrict the range of ranks explored
-- `--restriction_size_min`, `--restriction_size_max`: restrict which restriction sizes are processed
+- `--dim_min`, `--dim_max`: restrict which restriction subspace dimentions are processed
 - `--ignore_rank_lower_bound`: clear any existing lower bounds in the input before searching
 
 ### Verify the discovered proof

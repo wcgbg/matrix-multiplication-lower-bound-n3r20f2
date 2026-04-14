@@ -14,7 +14,7 @@
 #include "proof_verifier/restricted_mm.pb.h"
 #include "proof_verifier/restrictions.h"
 #include "proof_verifier/static_matrix.h"
-#include "proof_verifier/tensor.h"
+#include "proof_verifier/tensor_utils.h"
 
 // Transforms restrictions using the proof's (gl_left, gl_right, transpose)
 // so the result can be looked up in restrictions_to_rank_lower_bound.
@@ -154,13 +154,12 @@ void VerifyRankLowerBound(const pb::RestrictedMMCollection &collection,
   boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t>
       restrictions_to_rank_lower_bound;
   size_t total_count = 0;
-  for (int restriction_size = n0 * n1; restriction_size >= 0;
-       restriction_size--) {
-    LOG(INFO) << "restriction_size=" << restriction_size;
+  for (int dim = n0 * n1; dim >= 0; dim--) {
+    LOG(INFO) << "dim=" << dim;
     std::vector<const pb::RestrictedMM *> rmms;
     for (int i = 0; i < collection.restricted_mm_size(); ++i) {
       const pb::RestrictedMM &rmm = collection.restricted_mm(i);
-      if (rmm.restriction_size() == restriction_size) {
+      if (rmm.restriction_size() == dim) {
         rmms.push_back(&rmm);
       }
     }

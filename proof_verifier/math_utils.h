@@ -70,5 +70,6 @@ int GaussJordanElimination(int bitwidth, VectorOfUnsignedInts *matrix) {
 
 template <typename VectorOfUnsignedInts>
 bool IsLinearIndependent(int bitwidth, VectorOfUnsignedInts matrix) {
-  return GaussJordanElimination(bitwidth, &matrix) == matrix.size();
+  return GaussJordanElimination(bitwidth, &matrix) ==
+         static_cast<int>(matrix.size());
 }

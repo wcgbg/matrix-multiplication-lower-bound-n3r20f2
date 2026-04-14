@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include <initializer_list>
 
-#include "proof_verifier/tensor.h"
+#include "proof_verifier/tensor_utils.h"
 
 TEST(ApplyRestrictionsToTensorTest, N2SubstituteLastVariableDimension0) {
   constexpr int n = 2;
@@ -65,7 +65,7 @@ TEST(ApplyRestrictionsToTensorTest, N2SingleVariableRestrictionZerosPivot) {
 TEST(ApplyRestrictionsToTensorTest, N3_24_68571) {
   constexpr int n = 3;
   Restrictions<n, n> restrictions_24;
-  for (const std::string &str :
+  for (const std::string str :
        {"[100,000,000]", "[010,000,000]", "[001,000,000]", "[000,100,000]",
         "[000,010,100]", "[000,001,010]"}) {
     restrictions_24.push_back(StaticMatrix<n>::FromString(str).Data());
@@ -79,7 +79,7 @@ TEST(ApplyRestrictionsToTensorTest, N3_24_68571) {
   EXPECT_EQ(tensor_24, expected_tensor_24);
 
   Restrictions<n, n> restrictions_68571;
-  for (const std::string &str :
+  for (const std::string str :
        {"[001,100,000]", "[100,010,000]", "[110,001,000]", "[001,000,010]",
         "[100,000,101]"}) {
     restrictions_68571.push_back(StaticMatrix<n>::FromString(str).Data());

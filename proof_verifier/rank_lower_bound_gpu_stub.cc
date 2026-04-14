@@ -1,5 +1,7 @@
 #include "proof_verifier/rank_lower_bound_gpu.h"
 
+#include <ng-log/logging.h>
+
 // Single translation unit provides the symbol when not building with CUDA.
 bool IsCudaAvailable() { return false; }
 

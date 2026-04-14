@@ -11,7 +11,7 @@
 
 #include "proof_verifier/dynamic_matrix.h"
 #include "proof_verifier/rank_lower_bound_gpu.h"
-#include "proof_verifier/tensor.h"
+#include "proof_verifier/tensor_utils.h"
 
 // Return a matrix of shape (n0*n1, (n1*n2)*(n2*n0)).
 template <int n0, int n1, int n2>

@@ -93,17 +93,24 @@ cc_library(
 cc_library(
     name = "tensor",
     hdrs = ["tensor.h"],
+)
+
+cc_library(
+    name = "tensor_utils",
+    hdrs = ["tensor_utils.h"],
     deps = [
+        ":tensor",
         "@boost.algorithm",
         "@ng-log//:ng-log",
     ],
 )
 
 cc_test(
-    name = "tensor_test",
-    srcs = ["tensor_test.cc"],
+    name = "tensor_utils_test",
+    srcs = ["tensor_utils_test.cc"],
     deps = [
         ":tensor",
+        ":tensor_utils",
         "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
@@ -116,7 +123,7 @@ cc_library(
         ":math_utils",
         ":restricted_mm_cc_proto",
         ":static_matrix",
-        ":tensor",
+        ":tensor_utils",
         "@boost.container",
     ],
 )
@@ -143,6 +150,7 @@ cc_test(
 
 cuda_library(
     name = "rank_lower_bound_gpu_cuda",
+    tags = ["cuda"],
     srcs = ["rank_lower_bound_gpu_cuda.cu"],
     hdrs = ["rank_lower_bound_gpu.h"],
     # copts = ["-Wno-deprecated-gpu-targets"],
@@ -163,7 +171,10 @@ cc_library(
             ":rank_lower_bound_gpu_cuda",
             ":tensor",
         ],
-        "//conditions:default": [":tensor"],
+        "//conditions:default": [
+            ":tensor",
+            "@ng-log//:ng-log",
+        ],
     }),
 )
 
@@ -173,7 +184,7 @@ cc_library(
     deps = [
         ":dynamic_matrix",
         ":rank_lower_bound_gpu",
-        ":tensor",
+        ":tensor_utils",
         "@ng-log//:ng-log",
         "@onetbb//:tbb",
     ],
@@ -185,7 +196,7 @@ cc_test(
     deps = [
         ":dynamic_matrix",
         ":rank_lower_bound_basic_technics",
-        ":tensor",
+        ":tensor_utils",
         "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],
@@ -197,7 +208,7 @@ cc_binary(
     malloc = "@mimalloc",
     deps = [
         ":rank_lower_bound_basic_technics",
-        ":tensor",
+        ":tensor_utils",
         "@ng-log//:ng-log",
     ],
 )
@@ -208,7 +219,7 @@ cc_binary(
     malloc = "@mimalloc",
     deps = [
         ":rank_lower_bound_basic_technics",
-        ":tensor",
+        ":tensor_utils",
         "@ng-log//:ng-log",
     ],
 )
@@ -258,7 +269,7 @@ cc_test(
     deps = [
         ":restricted_mm_cc_proto",
         ":restrictions",
-        ":tensor",
+        ":tensor_utils",
         "@googletest//:gtest",
         "@googletest//:gtest_main",
     ],

@@ -1,4 +1,5 @@
 #include "proof_verifier/tensor.h"
+#include "proof_verifier/tensor_utils.h"
 
 #include <gtest/gtest.h>
 

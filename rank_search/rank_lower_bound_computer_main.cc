@@ -20,9 +20,9 @@ DEFINE_uint64(backtracking_step_limit, std::numeric_limits<uint64_t>::max(),
 DEFINE_int32(rank_lower_bound_min, 0, "Rank lower bound min (0 to n0*n1*n2)");
 DEFINE_int32(rank_lower_bound_max, std::numeric_limits<int32_t>::max(),
              "Rank lower bound max (0 to n0*n1*n2)");
-DEFINE_int32(restriction_size_min, 0, "Restriction size min (0 to n0*n1)");
-DEFINE_int32(restriction_size_max, std::numeric_limits<int32_t>::max(),
-             "Restriction size max (0 to n0*n1)");
+DEFINE_int32(dim_min, 0, "Restriction subspace dimension min (0 to n0*n1)");
+DEFINE_int32(dim_max, std::numeric_limits<int32_t>::max(),
+             "Restriction subspace dimension max (0 to n0*n1)");
 
 int main(int argc, char **argv) {
   FLAGS_alsologtostderr = true;
@@ -76,8 +76,8 @@ int main(int argc, char **argv) {
           .backtracking_step_limit = FLAGS_backtracking_step_limit,
           .rank_lower_bound_min = FLAGS_rank_lower_bound_min,
           .rank_lower_bound_max = FLAGS_rank_lower_bound_max,
-          .restriction_size_min = FLAGS_restriction_size_min,
-          .restriction_size_max = FLAGS_restriction_size_max,
+          .dim_min = FLAGS_dim_min,
+          .dim_max = FLAGS_dim_max,
           .bt_proof_root_dir = GetBacktrackingProofRootDir(output_path),
       },
       output_path, &collection, &restrictions_to_rank_lower_bound);

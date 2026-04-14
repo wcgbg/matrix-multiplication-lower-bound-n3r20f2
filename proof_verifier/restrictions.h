@@ -12,7 +12,7 @@
 #include "proof_verifier/math_utils.h"
 #include "proof_verifier/restricted_mm.pb.h"
 #include "proof_verifier/static_matrix.h"
-#include "proof_verifier/tensor.h"
+#include "proof_verifier/tensor_utils.h"
 
 template <int n0, int n1>
 using Restrictions = std::vector<StaticMatrixData<n0, n1>>;

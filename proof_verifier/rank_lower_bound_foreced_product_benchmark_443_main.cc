@@ -1,5 +1,5 @@
 #include "proof_verifier/rank_lower_bound_basic_technics.h"
-#include "proof_verifier/tensor.h"
+#include "proof_verifier/tensor_utils.h"
 
 int main(int argc, char **argv) {
   Tensor<4, 4, 3> tensor = SparseStringToTensor<4, 4, 3>(

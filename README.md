@@ -25,7 +25,7 @@ This project requires C++20 support. If needed, configure your C++ toolchain in 
 
 To build all without CUDA:
 ```
-bazel build -c opt -- //... -//proof_verifier:rank_lower_bound_gpu_cuda
+bazel build -c opt --build_tag_filters=-cuda //...
 ```
 
 To build all with CUDA:

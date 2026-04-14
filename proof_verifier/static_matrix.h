@@ -113,8 +113,9 @@ public:
 
     int rank = 0;
     int pivot_col = 0;
+    int row = 0;
 
-    for (int row = 0; row < n0 && pivot_col < n1; ++row) {
+    while (row < n0 && pivot_col < n1) {
       int pivot_row = -1;
       for (int r = row; r < n0; ++r) {
         if (rows[r] & (DataType(1) << pivot_col)) {
@@ -125,7 +126,6 @@ public:
 
       if (pivot_row == -1) {
         ++pivot_col;
-        --row;
         continue;
       }
 
@@ -140,6 +140,7 @@ public:
       }
 
       ++rank;
+      ++row;
       ++pivot_col;
     }
 

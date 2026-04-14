@@ -2,12 +2,9 @@
 
 #include <algorithm>
 #include <bit>
-#include <initializer_list>
 #include <limits>
-#include <random>
 #include <vector>
 
-#include <boost/unordered/unordered_flat_set.hpp>
 #include <ng-log/logging.h>
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
@@ -16,7 +13,8 @@
 #include "proof_verifier/restricted_mm.pb.h"
 #include "proof_verifier/restrictions.h"
 #include "proof_verifier/static_matrix.h"
-#include "proof_verifier/tensor.h"
+#include "proof_verifier/tensor_utils.h"
+#include "restrictions_set.h"
 
 template <int n0, int n1, int n2> class RestrictionEnumerator {
 public:
@@ -27,25 +25,20 @@ public:
     static_assert(n0 * n1 < 32);
     static_assert(n1 * n1 < 32);
 
-    // Build full_rank_matrices_n0_ for n0×n0 matrices (for gl_left)
     for (uint32_t d00 = 0; d00 < (uint32_t(1) << (n0 * n0)); ++d00) {
       StaticMatrix<n0> mat00(d00);
-      int rank = mat00.Rank();
-      if (rank == n0) {
+      if (mat00.Rank() == n0) {
         full_rank_matrices_n0_.push_back(mat00);
       }
     }
 
-    // Build full_rank_matrices_n1_ for n1×n1 matrices (for gl_right)
     for (uint32_t d11 = 0; d11 < (uint32_t(1) << (n1 * n1)); ++d11) {
       StaticMatrix<n1> mat11(d11);
-      int rank = mat11.Rank();
-      if (rank == n1) {
+      if (mat11.Rank() == n1) {
         full_rank_matrices_n1_.push_back(mat11);
       }
     }
 
-    // Build transpose table: n0×n1 → n1×n0
     for (uint32_t d01 = 0; d01 < (uint32_t(1) << (n0 * n1)); ++d01) {
       StaticMatrix<n0, n1> mat01(d01);
       m_to_transpose_n01_.push_back(mat01.Transposed());
@@ -53,30 +46,28 @@ public:
   }
 
   pb::RestrictedMMCollection Search() {
-    some_visited_restrictions_.clear();
-    minimal_restrictions_.clear();
+    std::vector<std::vector<Restrictions<n0, n1>>> dim_to_restrictions(n0 * n1 +
+                                                                       1);
+    dim_to_restrictions[0].push_back(Restrictions<n0, n1>());
+    LOG(INFO) << "dim=0 count=1";
 
-    Restrictions<n0, n1> restrictions;
-    minimal_restrictions_.push_back(restrictions);
-    Search(restrictions);
+    for (int dim = 1; dim <= n0 * n1; ++dim) {
+      RestrictionsSet<n0, n1> some_visited_restrictions;
+      std::vector<Restrictions<n0, n1>> restrictions;
+      for (const auto &parent : dim_to_restrictions[dim - 1]) {
+        ExpandNextLayer(parent, &some_visited_restrictions, &restrictions);
+      }
+      std::sort(restrictions.begin(), restrictions.end());
+      dim_to_restrictions[dim] = std::move(restrictions);
+      LOG(INFO) << "dim=" << dim
+                << " count=" << dim_to_restrictions[dim].size();
+    }
 
     Tensor<n0, n1, n2> matrix_multiplication_tensor =
         MatrixMultiplicationTensor<n0, n1, n2>();
-    std::vector<std::vector<Restrictions<n0, n1>>> rank_to_restrictions(
-        n0 * n1 + 1);
-    for (int i = 0; i < static_cast<int>(minimal_restrictions_.size()); ++i) {
-      const Restrictions<n0, n1> &restrictions = minimal_restrictions_[i];
-      if (i == 0 || !restrictions.empty()) {
-        rank_to_restrictions.at(restrictions.size()).push_back(restrictions);
-      }
-    }
     pb::RestrictedMMCollection collection;
-    for (int rank = rank_to_restrictions.size() - 1; rank >= 0; --rank) {
-      LOG(INFO) << "restriction_rank=" << rank
-                << " count=" << rank_to_restrictions.at(rank).size();
-      std::sort(rank_to_restrictions[rank].begin(),
-                rank_to_restrictions[rank].end());
-      for (const auto &restrictions : rank_to_restrictions[rank]) {
+    for (int dim = n0 * n1; dim >= 0; --dim) {
+      for (const auto &restrictions : dim_to_restrictions[dim]) {
         int index = collection.restricted_mm_size();
         pb::RestrictedMM *rmm = collection.add_restricted_mm();
         rmm->set_index(index);
@@ -146,17 +137,12 @@ private:
     return restriction;
   }
 
-  void Search(Restrictions<n0, n1> &restrictions) {
-    if (restrictions.size() == static_cast<size_t>(n0 * n1)) {
-      return;
-    }
-
-    // pivot_mask is the bit-wise-or of the highest bit of each restriction.
+  void ExpandNextLayer(const Restrictions<n0, n1> &base_restrictions,
+                       RestrictionsSet<n0, n1> *some_visited_restrictions,
+                       std::vector<Restrictions<n0, n1>> *next_layer) {
     StaticMatrixData<n0, n1> pivot_mask = 0;
-    for (const auto &restriction : restrictions) {
-      // For each restriction, get the highest 1-bit present (pivot column).
+    for (const auto &restriction : base_restrictions) {
       CHECK_NE(restriction, 0);
-      // n0 * n1 is the total number of bits in restriction.
       int highest_bit_position =
           std::numeric_limits<StaticMatrixData<n0, n1>>::digits - 1 -
           std::countl_zero(restriction);
@@ -166,7 +152,7 @@ private:
         std::numeric_limits<StaticMatrixData<n0, n1>>::digits -
         std::countl_zero(pivot_mask);
     int pivot_mask_weight = std::popcount(pivot_mask);
-    CHECK_EQ(pivot_mask_weight, static_cast<int>(restrictions.size()));
+    CHECK_EQ(pivot_mask_weight, static_cast<int>(base_restrictions.size()));
     CHECK_LE(pivot_mask_weight, pivot_mask_width);
 
     static_assert(n0 * n1 <=
@@ -175,59 +161,71 @@ private:
     uint32_t hi_end = (uint32_t(1) << (n0 * n1 - pivot_mask_width));
     uint32_t lo_end = (uint32_t(1) << (pivot_mask_width - pivot_mask_weight));
 
+    Restrictions<n0, n1> restrictions = base_restrictions;
     for (uint32_t hi = 1; hi < hi_end; ++hi) {
       for (uint32_t lo = 0; lo < lo_end; ++lo) {
         StaticMatrixData<n0, n1> restriction = MakeRestrictionFromHiLo(
             hi, lo, pivot_mask, pivot_mask_width, pivot_mask_weight);
         restrictions.push_back(restriction);
-        if (Visit(restrictions)) {
-          Search(restrictions);
+        if (Visit(restrictions, some_visited_restrictions)) {
+          next_layer->push_back(restrictions);
         }
         restrictions.pop_back();
       }
     }
   }
 
-  // Returns false if it has been visited.
-  bool Visit(const Restrictions<n0, n1> &restrictions) {
-    Restrictions<n0, n1> new_restrictions;
-    new_restrictions.reserve(restrictions.size());
-
-    for (bool transpose : {false, true}) {
-      if (n0 != n1 || n1 != n2 || n0 != n2) {
-        if (transpose) {
-          break;
-        }
-      }
-      for (const StaticMatrix<n0> &gl_left : full_rank_matrices_n0_) {
-        CHECK(TransformRestrictions(restrictions, transpose, gl_left,
-                                    StaticMatrix<n1>::Identity(),
-                                    &new_restrictions));
-        if (some_visited_restrictions_.contains(new_restrictions)) {
-          return false;
-        }
-      }
+  bool Visit(const Restrictions<n0, n1> &restrictions,
+             RestrictionsSet<n0, n1> *some_visited_restrictions) {
+    constexpr int kTransposeRange = (n0 == n1 && n1 == n2) ? 2 : 1;
+    std::atomic<bool> found_duplicate = false;
+    tbb::parallel_for(
+        tbb::blocked_range<size_t>(0, kTransposeRange *
+                                          full_rank_matrices_n0_.size()),
+        [&](const tbb::blocked_range<size_t> &range) {
+          Restrictions<n0, n1> new_restrictions;
+          new_restrictions.reserve(restrictions.size());
+          for (size_t idx = range.begin(); idx != range.end(); ++idx) {
+            if (found_duplicate) {
+              return;
+            }
+            bool transpose = false;
+            size_t gl_left_idx = idx;
+            if constexpr (kTransposeRange == 2) {
+              transpose = idx % 2 == 1;
+              gl_left_idx = idx / 2;
+            }
+            const StaticMatrix<n0> &gl_left =
+                full_rank_matrices_n0_[gl_left_idx];
+            CHECK(TransformRestrictions(restrictions, transpose, gl_left,
+                                        StaticMatrix<n1>::Identity(),
+                                        &new_restrictions));
+            if (some_visited_restrictions->ContainsUnsafe(new_restrictions)) {
+              found_duplicate = true;
+              return;
+            }
+          }
+        });
+    if (found_duplicate) {
+      return false;
     }
-    CHECK_LT(minimal_restrictions_.size(), (uint64_t(1) << 32));
-    for (const StaticMatrix<n1> &gl_right : full_rank_matrices_n1_) {
-      CHECK(TransformRestrictions(restrictions, false,
-                                  StaticMatrix<n0>::Identity(), gl_right,
-                                  &new_restrictions));
-      some_visited_restrictions_.insert(new_restrictions);
-    }
 
-    minimal_restrictions_.push_back(restrictions);
-    LOG(INFO) << "mr.size=" << minimal_restrictions_.size()
-              << ", svr.size=" << some_visited_restrictions_.size();
+    tbb::parallel_for(
+        tbb::blocked_range<size_t>(0, full_rank_matrices_n1_.size()),
+        [&](const tbb::blocked_range<size_t> &range) {
+          for (size_t idx = range.begin(); idx != range.end(); ++idx) {
+            const StaticMatrix<n1> &gl_right = full_rank_matrices_n1_[idx];
+            Restrictions<n0, n1> transformed;
+            CHECK(TransformRestrictions(restrictions, false,
+                                        StaticMatrix<n0>::Identity(), gl_right,
+                                        &transformed));
+            some_visited_restrictions->Insert(transformed);
+          }
+        });
     return true;
   }
 
   std::vector<StaticMatrix<n0>> full_rank_matrices_n0_;
   std::vector<StaticMatrix<n1>> full_rank_matrices_n1_;
   std::vector<StaticMatrix<n1, n0>> m_to_transpose_n01_; // n0*n1 -> n1*n0
-
-  std::mt19937_64 gen_;
-
-  boost::unordered_flat_set<Restrictions<n0, n1>> some_visited_restrictions_;
-  std::vector<Restrictions<n0, n1>> minimal_restrictions_;
 };

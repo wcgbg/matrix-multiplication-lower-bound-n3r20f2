@@ -26,7 +26,7 @@
 #include "proof_verifier/restricted_mm.pb.h"
 #include "proof_verifier/restrictions.h"
 #include "proof_verifier/static_matrix.h"
-#include "proof_verifier/tensor.h"
+#include "proof_verifier/tensor_utils.h"
 #include "rank_lower_bound_backtracking.h"
 #include "restrictions_map.h"
 
@@ -199,8 +199,8 @@ struct ProcessOptions {
   uint64_t backtracking_step_limit = std::numeric_limits<uint64_t>::max();
   int rank_lower_bound_min = 0;
   int rank_lower_bound_max = std::numeric_limits<int>::max();
-  int restriction_size_min = 0;
-  int restriction_size_max = std::numeric_limits<int>::max();
+  int dim_min = 0;
+  int dim_max = std::numeric_limits<int>::max();
   std::string bt_proof_root_dir;
 };
 
@@ -209,7 +209,7 @@ struct ProcessOptions {
 // Returns true if any rank lower bound was updated.
 template <int n0, int n1, int n2>
 bool ProcessOneRankLowerBound(
-    int restriction_size, const ProcessOptions &options,
+    int dim, const ProcessOptions &options,
     pb::RestrictedMMCollection *collection,
     RestrictionsMap<n0, n1, n2> *restrictions_to_rank_lower_bound) {
   auto iteration_start = std::chrono::steady_clock::now();
@@ -217,15 +217,14 @@ bool ProcessOneRankLowerBound(
   std::vector<pb::RestrictedMM *> rmms;
   for (int i = 0; i < collection->restricted_mm_size(); ++i) {
     pb::RestrictedMM *rmm = collection->mutable_restricted_mm(i);
-    if (rmm->restriction_size() == restriction_size) {
+    if (rmm->restriction_size() == dim) {
       if (rmm->rank_lower_bound() >= options.rank_lower_bound_min &&
           rmm->rank_lower_bound() <= options.rank_lower_bound_max) {
         rmms.push_back(rmm);
       }
     }
   }
-  LOG(INFO) << "Processing restriction_size=" << restriction_size
-            << ", count=" << rmms.size();
+  LOG(INFO) << "Processing dim=" << dim << ", count=" << rmms.size();
 
   // Parallel processing with progress tracking
   std::vector<std::pair<int, pb::RankLowerBoundProof>> rank_and_proof_list(
@@ -264,7 +263,7 @@ bool ProcessOneRankLowerBound(
       });
 
   bool has_update = false;
-  for (int i = 0; i < rmms.size(); ++i) {
+  for (int i = 0; i < static_cast<int>(rmms.size()); ++i) {
     std::cerr << std::format("  i={}/{}    \r", i, rmms.size());
     if (rank_and_proof_list[i].second.proof_case() ==
         pb::RankLowerBoundProof::PROOF_NOT_SET) {
@@ -299,15 +298,12 @@ bool ProcessRestrictions(
     pb::RestrictedMMCollection *collection,
     RestrictionsMap<n0, n1, n2> *restrictions_to_rank_lower_bound) {
   bool has_update = false;
-  for (int restriction_size = n0 * n1; restriction_size >= 0;
-       restriction_size--) {
-    if (restriction_size < options.restriction_size_min ||
-        restriction_size > options.restriction_size_max) {
+  for (int dim = n0 * n1; dim >= 0; dim--) {
+    if (dim < options.dim_min || dim > options.dim_max) {
       continue;
     }
     if (ProcessOneRankLowerBound<n0, n1, n2>(
-            restriction_size, options, collection,
-            restrictions_to_rank_lower_bound)) {
+            dim, options, collection, restrictions_to_rank_lower_bound)) {
       has_update = true;
     }
     if (!output_path.empty()) {

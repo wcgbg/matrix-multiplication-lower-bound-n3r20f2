@@ -173,7 +173,7 @@ private:
     restrictions.reserve(dfs_restrictions->size());
     for (uint32_t mask : masks_[dfs_restrictions->size() - 1]) {
       restrictions.clear();
-      for (int i = 0; i < dfs_restrictions->size() - 1; ++i) {
+      for (int i = 0; i < static_cast<int>(dfs_restrictions->size()) - 1; ++i) {
         if (mask & (1 << i)) {
           restrictions.push_back(dfs_restrictions->at(i));
         }
@@ -208,7 +208,7 @@ private:
       }
     }
 
-    if (dfs_restrictions->size() == max_depth_) {
+    if (static_cast<int>(dfs_restrictions->size()) == max_depth_) {
       return rank_lower_bound_self;
     }
 

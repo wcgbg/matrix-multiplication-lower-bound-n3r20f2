@@ -103,7 +103,7 @@ public:
         }
         int new_restrictions_rank =
             GaussJordanElimination(n0 * n1, &new_restrictions);
-        CHECK_EQ(new_restrictions_rank, restrictions.size());
+        CHECK_EQ(new_restrictions_rank, static_cast<int>(restrictions.size()));
         new_restrictions.shrink_to_fit();
         size_t map_index = boost::hash_value(new_restrictions) % kNumOfMaps;
         std::lock_guard<std::mutex> lock(mutexes_[map_index]);

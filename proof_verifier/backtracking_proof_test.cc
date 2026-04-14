@@ -38,7 +38,7 @@ TEST(BacktrackingProofTest, SaveLoadRoundTripNonEmpty) {
 
   BacktrackingProof loaded = BacktrackingProof::Load(path);
   ASSERT_EQ(loaded.Size(), proof.Size());
-  for (int i = 0; i < proof.Size(); i++) {
+  for (size_t i = 0; i < proof.Size(); i++) {
     EXPECT_EQ(loaded.dfs_restrictions_size_array[i],
               proof.dfs_restrictions_size_array[i]);
     EXPECT_EQ(loaded.mask_array[i], proof.mask_array[i]);

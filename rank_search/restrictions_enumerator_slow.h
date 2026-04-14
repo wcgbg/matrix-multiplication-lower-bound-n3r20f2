@@ -10,7 +10,7 @@
 #include "proof_verifier/restricted_mm.pb.h"
 #include "proof_verifier/restrictions.h"
 #include "proof_verifier/static_matrix.h"
-#include "proof_verifier/tensor.h"
+#include "proof_verifier/tensor_utils.h"
 
 template <int n0, int n1, int n2> class RestrictionEnumeratorSlow {
 public:
@@ -70,21 +70,20 @@ public:
 
     Tensor<n0, n1, n2> matrix_multiplication_tensor =
         MatrixMultiplicationTensor<n0, n1, n2>();
-    std::vector<std::vector<Restrictions<n0, n1>>> restrictions_by_size(
-        n0 * n1 + 1);
+    std::vector<std::vector<Restrictions<n0, n1>>> dim_to_restrictions(n0 * n1 +
+                                                                       1);
     for (const auto &r : minimal_restrictions_) {
-      restrictions_by_size.at(r.size()).push_back(r);
+      dim_to_restrictions.at(r.size()).push_back(r);
     }
     pb::RestrictedMMCollection collection;
-    for (int restrictions_size =
-             static_cast<int>(restrictions_by_size.size()) - 1;
-         restrictions_size >= 0; --restrictions_size) {
-      LOG(INFO) << "restriction_size=" << restrictions_size << " count="
-                << restrictions_by_size.at(restrictions_size).size();
-      std::sort(restrictions_by_size[restrictions_size].begin(),
-                restrictions_by_size[restrictions_size].end());
+    for (int dim = static_cast<int>(dim_to_restrictions.size()) - 1; dim >= 0;
+         --dim) {
+      LOG(INFO) << "dim=" << dim
+                << " count=" << dim_to_restrictions.at(dim).size();
+      std::sort(dim_to_restrictions[dim].begin(),
+                dim_to_restrictions[dim].end());
       for (const Restrictions<n0, n1> &restrictions :
-           restrictions_by_size[restrictions_size]) {
+           dim_to_restrictions[dim]) {
         int index = collection.restricted_mm_size();
         pb::RestrictedMM *rmm = collection.add_restricted_mm();
         rmm->set_index(index);
