@@ -16,7 +16,11 @@
 DEFINE_string(output_path, "", "Output path");
 DEFINE_bool(ignore_rank_lower_bound, false, "Ignore rank lower bound");
 DEFINE_uint64(backtracking_step_limit, std::numeric_limits<uint64_t>::max(),
-              "Max number of backtracking search steps (all threads)");
+              "Max number of backtracking search steps (all threads) per one "
+              "restriction subspace");
+DEFINE_uint64(backtracking_max_map_size, 10'000'000,
+              "Max size of the per-thread local cache map used by the "
+              "backtracking search before stochastic halving");
 DEFINE_int32(rank_lower_bound_min, 0, "Rank lower bound min (0 to n0*n1*n2)");
 DEFINE_int32(rank_lower_bound_max, std::numeric_limits<int32_t>::max(),
              "Rank lower bound max (0 to n0*n1*n2)");
@@ -74,6 +78,7 @@ int main(int argc, char **argv) {
           .basic_method = true,
           .degenerate_method = true,
           .backtracking_step_limit = FLAGS_backtracking_step_limit,
+          .backtracking_max_map_size = FLAGS_backtracking_max_map_size,
           .rank_lower_bound_min = FLAGS_rank_lower_bound_min,
           .rank_lower_bound_max = FLAGS_rank_lower_bound_max,
           .dim_min = FLAGS_dim_min,

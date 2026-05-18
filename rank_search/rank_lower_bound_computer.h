@@ -95,6 +95,11 @@ template <int n0, int n1, int n2>
 void BuildRestrictionsMap(
     const pb::RestrictedMMCollection &collection, int rank_lower_bound_max,
     RestrictionsMap<n0, n1, n2> *restrictions_to_rank_lower_bound) {
+  CHECK_EQ(collection.n0(), n0);
+  CHECK_EQ(collection.n1(), n1);
+  CHECK_EQ(collection.n2(), n2);
+  CHECK_EQ(collection.p(), 2);
+
   int size = collection.restricted_mm_size();
   std::atomic<int> progress = 0;
   tbb::parallel_for(
@@ -104,9 +109,6 @@ void BuildRestrictionsMap(
           std::cerr << std::format("  {}/{}    \r", progress.fetch_add(1),
                                    size);
           const pb::RestrictedMM &rmm = collection.restricted_mm(i);
-          CHECK_EQ(rmm.n0(), n0);
-          CHECK_EQ(rmm.n1(), n1);
-          CHECK_EQ(rmm.n2(), n2);
           if (rmm.rank_lower_bound() > rank_lower_bound_max) {
             continue;
           }
@@ -121,19 +123,15 @@ std::tuple<int, pb::RankLowerBoundProof, std::string> ProcessRestrictedMM(
     const pb::RestrictedMM &rmm,
     const RestrictionsMap<n0, n1, n2> &restrictions_to_rank_lower_bound,
     bool basic_method, bool degenerate_method, uint64_t backtracking_step_limit,
-    const std::string &bt_proof_root_dir) {
-  CHECK_EQ(rmm.n0(), n0);
-  CHECK_EQ(rmm.n1(), n1);
-  CHECK_EQ(rmm.n2(), n2);
-  CHECK_EQ(rmm.p(), 2);
-
+    size_t backtracking_max_map_size, const std::string &bt_proof_root_dir) {
   int rank_lower_bound =
       rmm.has_rank_lower_bound() ? rmm.rank_lower_bound() : -1;
   pb::RankLowerBoundProof rank_lower_bound_proof;
   std::string proof_case_name;
 
   Restrictions<n0, n1> restrictions = RestrictionsFromProto<n0, n1>(rmm);
-  Tensor<n0, n1, n2> tensor = SparseStringToTensor<n0, n1, n2>(rmm.tensor());
+  Tensor<n0, n1, n2> tensor = ApplyRestrictionsToTensor<n0, n1, n2>(
+      restrictions, MatrixMultiplicationTensor<n0, n1, n2>());
 
   if (basic_method && !rmm.has_rank_lower_bound()) {
     // FlattenMatrix method
@@ -178,7 +176,7 @@ std::tuple<int, pb::RankLowerBoundProof, std::string> ProcessRestrictedMM(
       auto [backtracking_rank, backtracking_proof] =
           RankLowerBoundBacktracking<n0, n1, n2>::Search(
               restrictions, restrictions_to_rank_lower_bound, rank_lower_bound,
-              backtracking_step_limit, proof_path);
+              backtracking_step_limit, backtracking_max_map_size, proof_path);
       if (backtracking_rank <= rank_lower_bound) {
         break;
       }
@@ -197,6 +195,7 @@ struct ProcessOptions {
   bool basic_method = true;
   bool degenerate_method = true;
   uint64_t backtracking_step_limit = std::numeric_limits<uint64_t>::max();
+  size_t backtracking_max_map_size = 10'000'000;
   int rank_lower_bound_min = 0;
   int rank_lower_bound_max = std::numeric_limits<int>::max();
   int dim_min = 0;
@@ -212,12 +211,17 @@ bool ProcessOneRankLowerBound(
     int dim, const ProcessOptions &options,
     pb::RestrictedMMCollection *collection,
     RestrictionsMap<n0, n1, n2> *restrictions_to_rank_lower_bound) {
+  CHECK_EQ(collection->n0(), n0);
+  CHECK_EQ(collection->n1(), n1);
+  CHECK_EQ(collection->n2(), n2);
+  CHECK_EQ(collection->p(), 2);
+
   auto iteration_start = std::chrono::steady_clock::now();
 
   std::vector<pb::RestrictedMM *> rmms;
   for (int i = 0; i < collection->restricted_mm_size(); ++i) {
     pb::RestrictedMM *rmm = collection->mutable_restricted_mm(i);
-    if (rmm->restriction_size() == dim) {
+    if (NumRestrictions<n0, n1>(*rmm) == dim) {
       if (rmm->rank_lower_bound() >= options.rank_lower_bound_min &&
           rmm->rank_lower_bound() <= options.rank_lower_bound_max) {
         rmms.push_back(rmm);
@@ -236,7 +240,7 @@ bool ProcessOneRankLowerBound(
     auto [rank, proof, proof_case_name] = ProcessRestrictedMM<n0, n1, n2>(
         *rmms[idx], *restrictions_to_rank_lower_bound, options.basic_method,
         options.degenerate_method, options.backtracking_step_limit,
-        options.bt_proof_root_dir);
+        options.backtracking_max_map_size, options.bt_proof_root_dir);
     if (proof.proof_case() != pb::RankLowerBoundProof::PROOF_NOT_SET) {
       LOG(INFO) << "Better LB for rmm_index=" << rmms[idx]->index() << ": "
                 << rmms[idx]->rank_lower_bound() << "->" << rank << " ("

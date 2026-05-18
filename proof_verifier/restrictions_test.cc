@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include <initializer_list>
 
+#include "proof_verifier/restricted_mm.pb.h"
 #include "proof_verifier/tensor_utils.h"
 
 TEST(ApplyRestrictionsToTensorTest, N2SubstituteLastVariableDimension0) {
@@ -92,4 +93,30 @@ TEST(ApplyRestrictionsToTensorTest, N3_24_68571) {
       "a02*b01*c11 + a02*b02*c12 + a02*b11*c12 + a02*b12*c22 + a02*b22*c11 + "
       "a20*b01*c12 + a20*b02*c22 + a20*b21*c12 + a20*b22*c22");
   EXPECT_EQ(tensor_24_68571, expected_tensor_24_68571);
+}
+
+TEST(RestrictionsCompactStringTest, N3RoundTrip) {
+  constexpr int n = 3;
+  Restrictions<n, n> restrictions;
+  for (const std::string str :
+       {"[100,000,000]", "[010,000,000]", "[001,000,000]", "[000,100,000]",
+        "[000,010,100]", "[000,001,010]"}) {
+    restrictions.push_back(StaticMatrix<n>::FromString(str).Data());
+  }
+
+  EXPECT_EQ((RestrictionsToString<n, n>(restrictions)),
+            "[100,000,000],[010,000,000],[001,000,000],[000,100,000],"
+            "[000,010,100],[000,001,010]");
+
+  const std::string compact = RestrictionsToCompactString<n, n>(restrictions);
+  EXPECT_EQ(compact.size(),
+            restrictions.size() * sizeof(StaticMatrixData<n, n>));
+
+  EXPECT_EQ((RestrictionsFromCompactString<n, n>(compact)), restrictions);
+
+  pb::RestrictedMM rmm;
+  rmm.set_compact_restrictions(compact);
+  EXPECT_EQ((NumRestrictions<n, n>(rmm)),
+            static_cast<int>(restrictions.size()));
+  EXPECT_EQ((RestrictionsFromProto<n, n>(rmm)), restrictions);
 }

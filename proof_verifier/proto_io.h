@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <fstream>
 #include <string>
 
@@ -34,20 +35,25 @@ void WriteProtoToFile(const T &message, const std::string &path,
   if (!quiet) {
     LOG(INFO) << "Writing to " << path << " ...";
   }
+  const std::string tmp_path = path + ".tmp";
   if (path.ends_with(".pb.txt")) {
-    std::ofstream out(path);
-    CHECK(out) << "Failed to open file: " << path;
+    std::ofstream out(tmp_path);
+    CHECK(out) << "Failed to open file: " << tmp_path;
     google::protobuf::io::OstreamOutputStream os(&out);
     CHECK(google::protobuf::TextFormat::Print(message, &os));
   } else if (path.ends_with(".pb")) {
-    std::ofstream out(path, std::ios::binary);
-    CHECK(out) << "Failed to open file: " << path;
+    std::ofstream out(tmp_path, std::ios::binary);
+    CHECK(out) << "Failed to open file: " << tmp_path;
     CHECK(message.SerializeToOstream(&out));
-    if (also_write_to_txt) {
-      WriteProtoToFile(message, path + ".txt");
-    }
   } else {
     LOG(FATAL) << "Unsupported file extension: " << path;
+  }
+  if (std::filesystem::exists(path)) {
+    std::filesystem::remove(path);
+  }
+  std::filesystem::rename(tmp_path, path);
+  if (path.ends_with(".pb") && also_write_to_txt) {
+    WriteProtoToFile(message, path + ".txt");
   }
   if (!quiet) {
     LOG(INFO) << "Written " << message.ByteSizeLong() << " bytes";

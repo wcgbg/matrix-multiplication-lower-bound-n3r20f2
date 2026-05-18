@@ -16,7 +16,8 @@ public:
   static void
   Verify(const Restrictions<n0, n1> &restrictions, int rank_lower_bound,
          const BacktrackingProof &proof,
-         const boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t>
+         const boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t,
+                                         RestrictionsHash<>>
              &restrictions_to_rank_lower_bound) {
     return RankLowerBoundBacktrackingVerifier(restrictions, rank_lower_bound,
                                               proof,
@@ -28,7 +29,8 @@ private:
   RankLowerBoundBacktrackingVerifier(
       const Restrictions<n0, n1> &restrictions, int rank_lower_bound,
       const BacktrackingProof &proof,
-      const boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t>
+      const boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t,
+                                      RestrictionsHash<>>
           &restrictions_to_rank_lower_bound)
       : base_restrictions_(restrictions), rank_lower_bound_(rank_lower_bound),
         proof_(proof),
@@ -80,6 +82,7 @@ private:
           TransformRestrictions<n0, n1, n2>(
               extended_restrictions, StaticMatrix<n0>(gl_left),
               StaticMatrix<n1>(gl_right), transpose);
+      CHECK_GT(transformed_restrictions.size(), base_restrictions_.size());
       auto it =
           restrictions_to_rank_lower_bound_.find(transformed_restrictions);
       CHECK(it != restrictions_to_rank_lower_bound_.end())
@@ -107,7 +110,8 @@ private:
   const Restrictions<n0, n1> &base_restrictions_;
   int rank_lower_bound_ = 0;
   const BacktrackingProof &proof_;
-  const boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t>
+  const boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t,
+                                  RestrictionsHash<>>
       &restrictions_to_rank_lower_bound_;
   std::vector<StaticMatrixData<n0, n1>> minimal_restrictions_;
 };

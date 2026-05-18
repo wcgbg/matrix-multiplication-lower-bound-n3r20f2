@@ -70,6 +70,7 @@ int RankLowerBoundForcedProductA(const Tensor<n0, n1, n2> &tensor,
     int rank = bc_matrix.Rank();
     a_to_rank_bc[i] = rank;
     if (rank == 0) {
+      // Do nothing
     } else if (rank == 1) {
       r1_count++;
     } else {
@@ -151,7 +152,7 @@ int RankLowerBoundForcedProductALoopCpu(
   const int r1_bc_rows = params.r1_bc_rows;
   const Tensor<n0, n1, n2> &r2p = params.r2p;
   const int bit_width = params.bit_width;
-  constexpr uint64_t prime = 73074167;
+  constexpr uint64_t kPrime = 73074167;
   const uint64_t mask = (uint64_t(1) << bit_width) - 1;
   const uint64_t num_iterations = uint64_t(1) << bit_width;
   const int known_lower_bound = params.known_lower_bound;
@@ -176,7 +177,7 @@ int RankLowerBoundForcedProductALoopCpu(
           if (early_break) {
             break;
           }
-          uint64_t binary = (t * prime) & mask;
+          uint64_t binary = (t * kPrime) & mask;
           Tensor<n0, n1, n2> tensor_t = r2p;
           for (int bit_idx = 0; bit_idx < bit_width; ++bit_idx) {
             if (((binary >> bit_idx) & 1) == 0) {

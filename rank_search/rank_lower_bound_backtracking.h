@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <atomic>
+#include <bit>
 #include <cstdint>
 #include <limits>
 #include <numeric>
@@ -23,11 +24,11 @@ public:
   static std::pair<int, pb::BacktrackingProof>
   Search(const Restrictions<n0, n1> &restrictions,
          const RestrictionsMap<n0, n1, n2> &restrictions_to_rank_lower_bound,
-         int known_rank_lower_bound, uint64_t step_limit,
+         int known_rank_lower_bound, uint64_t step_limit, size_t max_map_size,
          const std::string &proof_path) {
     return RankLowerBoundBacktracking(
                restrictions, restrictions_to_rank_lower_bound,
-               known_rank_lower_bound, step_limit, proof_path)
+               known_rank_lower_bound, step_limit, max_map_size, proof_path)
         .Search();
   }
 
@@ -39,17 +40,18 @@ private:
     StaticMatrix<n1> gl_right;
   };
   static_assert(sizeof(LocalMapValue) == 6);
-  using LocalMap =
-      boost::unordered_flat_map<Restrictions<n0, n1>, LocalMapValue>;
+  using LocalMap = boost::unordered_flat_map<Restrictions<n0, n1>,
+                                             LocalMapValue, RestrictionsHash<>>;
 
   RankLowerBoundBacktracking(
       const Restrictions<n0, n1> &restrictions,
       const RestrictionsMap<n0, n1, n2> &restrictions_to_rank_lower_bound,
-      int known_rank_lower_bound, uint64_t step_limit,
+      int known_rank_lower_bound, uint64_t step_limit, size_t max_map_size,
       const std::string &proof_path)
       : base_restrictions_(restrictions),
         restrictions_to_rank_lower_bound_(restrictions_to_rank_lower_bound),
-        step_limit_(step_limit), proof_path_(proof_path) {
+        step_limit_(step_limit), max_map_size_(max_map_size),
+        proof_path_(proof_path) {
     known_rank_lower_bound_ =
         std::max(known_rank_lower_bound,
                  restrictions_to_rank_lower_bound_.Get(base_restrictions_));
@@ -156,9 +158,8 @@ private:
     }
     int rank_lower_bound_self = 0;
     CHECK(!dfs_restrictions->empty());
-    constexpr size_t max_map_size = 10'000'000;
-    if (local_map->size() >= max_map_size) {
-      // delete half of the elements to avoid OOM
+    if (local_map->size() >= max_map_size_) {
+      // this is a cheap O(n) stochastic halving to avoid OOM, rather than LRU.
       unsigned int bit = local_map->size() & 1;
       for (auto it = local_map->begin(); it != local_map->end();) {
         if (bit == 0) {
@@ -169,46 +170,42 @@ private:
         bit ^= 1;
       }
     }
+    const size_t dfs_size = dfs_restrictions->size();
+    const auto &masks = masks_[dfs_size - 1];
     Restrictions<n0, n1> restrictions;
-    restrictions.reserve(dfs_restrictions->size());
-    for (uint32_t mask : masks_[dfs_restrictions->size() - 1]) {
+    restrictions.reserve(dfs_size);
+    for (uint32_t mask : masks) {
       restrictions.clear();
-      for (int i = 0; i < static_cast<int>(dfs_restrictions->size()) - 1; ++i) {
-        if (mask & (1 << i)) {
-          restrictions.push_back(dfs_restrictions->at(i));
-        }
+      // Iterate only over set bits (LSB -> MSB)
+      for (uint32_t m = mask; m != 0; m &= m - 1) {
+        restrictions.push_back((*dfs_restrictions)[std::countr_zero(m)]);
       }
       restrictions.push_back(dfs_restrictions->back());
       auto [it, inserted] = local_map->try_emplace(restrictions);
-      LocalMapValue local_map_value;
       if (inserted) {
         // not found in the hash map, compute and insert it.
         restrictions.insert(restrictions.end(), base_restrictions_.begin(),
                             base_restrictions_.end());
         bool transpose = false;
-        uint8_t rank = restrictions_to_rank_lower_bound_.Get(
-            restrictions, &transpose, &local_map_value.gl_left,
-            &local_map_value.gl_right);
-        local_map_value.rank = rank;
-        local_map_value.transpose = transpose;
-        it->second = local_map_value;
-      } else {
-        // in the hash map, get the value.
-        local_map_value = it->second;
+        it->second.rank = restrictions_to_rank_lower_bound_.Get(
+            restrictions, &transpose, &it->second.gl_left,
+            &it->second.gl_right);
+        it->second.transpose = transpose;
       }
+      const LocalMapValue &local_map_value = it->second;
       rank_lower_bound_self =
           std::max<int>(rank_lower_bound_self,
                         std::popcount(mask) + 1 + local_map_value.rank);
       if (rank_lower_bound_self >= target_rank_lower_bound_) {
-        uint32_t full_mask = mask | (1 << (dfs_restrictions->size() - 1));
-        proof->Append(dfs_restrictions->size(), full_mask,
-                      local_map_value.transpose, local_map_value.gl_left.Data(),
+        uint32_t full_mask = mask | (uint32_t(1) << (dfs_size - 1));
+        proof->Append(dfs_size, full_mask, local_map_value.transpose,
+                      local_map_value.gl_left.Data(),
                       local_map_value.gl_right.Data());
         return rank_lower_bound_self;
       }
     }
 
-    if (static_cast<int>(dfs_restrictions->size()) == max_depth_) {
+    if (dfs_size == max_depth_) {
       return rank_lower_bound_self;
     }
 
@@ -231,6 +228,7 @@ private:
   const RestrictionsMap<n0, n1, n2> &restrictions_to_rank_lower_bound_;
   int known_rank_lower_bound_ = 0;
   uint64_t step_limit_ = 0;
+  size_t max_map_size_ = 0;
   int max_depth_ = 0;
   int target_rank_lower_bound_ = 0;
   std::vector<std::vector<uint32_t>> masks_;

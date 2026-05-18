@@ -32,13 +32,13 @@
 \begin{abstract}
   We develop an automated framework for proving lower bounds on the bilinear complexity of matrix multiplication over finite fields. Our approach systematically combines orbit classification of the restricted first matrix and dynamic programming over these orbits with recursive substitution strategies, culminating in efficiently verifiable proof certificates.
 
-  Using this framework, we obtain several new lower bounds for various small matrix formats. Most notably, we prove that the bilinear complexity of multiplying two $3 \times 3$ matrices over $\mathbb{F}_2$ is at least $20$, improving upon the longstanding lower bound of $19$ (Bl{\"a}ser 2003). Our computer search discovers it in $1.5$ hours on a laptop, and the proof certificate can be verified in seconds.
+  Using this framework, we obtain several new lower bounds for various small matrix formats. Most notably, we prove that the bilinear complexity of multiplying two $3 \times 3$ matrices over $\mathbb{F}_2$ is at least $20$, improving upon the longstanding lower bound of $19$ (Bl{\"a}ser 2003). Our search program finds the proof in under an hour on a laptop, and the resulting certificate verifies in seconds.
 \end{abstract}
 
 \section{Introduction}
 
-Matrix multiplication is one of the central problems in algebraic complexity theory.
-Since Strassen showed that two $2\times 2$ matrices can be multiplied using only seven scalar multiplications instead of eight~\cite{strassen1969gaussian}, the study of upper and lower bounds has advanced rapidly.
+Matrix multiplication is a central problem in algebraic complexity theory.
+Strassen~\cite{strassen1969gaussian} showed that two $2\times 2$ matrices can be multiplied using seven scalar multiplications instead of the obvious eight, and the matrix multiplication complexity has been studied intensively ever since.
 
 In the bilinear and non-commutative setting, one asks for the minimum number of scalar products needed to express the entries of the product of two matrices as bilinear forms in the input entries.
 Equivalently, one may ask for the tensor rank of the corresponding matrix multiplication tensor.
@@ -77,7 +77,7 @@ $$
   \qquad (n\ge l\ge 2)
 $$
 over algebraically closed fields~\cite{blaser1999lower}.
-It implies the same lower bound over $\mathbb{Q}$ and $\mathbb{F}_2$.
+This implies the same lower bound over $\mathbb{Q}$ and $\mathbb{F}_2$.
 Second, he proved
 $$
   \mathbf{R}(\langle n,n,n\rangle)\ge \frac{5}{2}n^2-3n
@@ -98,14 +98,14 @@ On the upper-bound side, Laderman~\cite{laderman1976noncommutative} constructed 
 
 We prove that the tensor rank of the matrix multiplication tensor for two $3 \times 3$ matrices is at least 20 over $\mathbb{F}_2$; equivalently, any bilinear algorithm for multiplying two $3 \times 3$ matrices over $\mathbb{F}_2$ must use at least 20 scalar multiplications. This improves upon the longstanding lower bound of $19$ established by Bl{\"a}ser in 2003~\cite{blaser2003complexity}.
 
-\begin{theorem} \label{thm:n333r20}
+\begin{theorem}
   $\mathbf{R}(\langle 3,3,3\rangle)\ge 20$ over $\mathbb{F}_2$.
 \end{theorem}
 
 To achieve this, we develop an automated framework designed to prove lower bounds for small matrix multiplication tensors over finite fields.
 Our framework computes lower bounds by performing dynamic programming on restricted first matrices with four lower-bound techniques—including the substitution method via backtracking search—and produces proof certificates that can be independently verified.
 Symmetries are exploited throughout to reduce the search space.
-The efficiency of this approach is demonstrated by our $\langle 3,3,3\rangle$ result: the search algorithm constructs the proof in just $1.5$ hours on a laptop, while the generated certificate can be deterministically verified on the same laptop in seconds.
+The efficiency of this approach is demonstrated by our $\langle 3,3,3\rangle$ result: the search algorithm constructs the proof within just one hour on a laptop, while the generated certificate can be deterministically verified on the same laptop in seconds.
 
 Beyond the $3\times 3$ case, our method yields several further new lower bounds over $\mathbb{F}_2$, demonstrating its general applicability to various matrix dimensions.
 
@@ -121,7 +121,7 @@ Beyond the $3\times 3$ case, our method yields several further new lower bounds 
   $\mathbf{R}(\langle 3,4,4\rangle)\ge 29$ over $\mathbb{F}_2$.
 \end{theorem}
 
-Our lower bound for $\langle 2,3,4\rangle$ completes the proof that was briefly mentioned but skipped by Hopcroft and Kerr in 1971~\cite{hopcroft1971minimizing}. Our bounds for $\langle 3,3,4\rangle$ and $\langle 3,4,4\rangle$ further confirm that the method scales to many matrix sizes.
+Our lower bound for $\langle 2,3,4\rangle$ completes a proof that was omitted by Hopcroft and Kerr in 1971~\cite{hopcroft1971minimizing}. Our bounds for $\langle 3,3,4\rangle$ and $\langle 3,4,4\rangle$ further confirm that the method scales to many matrix sizes.
 
 The table below summarizes the tensor rank lower and upper bounds over $\mathbb{F}_2$, highlighting our contributions in boxes.
 
@@ -142,21 +142,21 @@ The table below summarizes the tensor rank lower and upper bounds over $\mathbb{
 \end{center}
 
 While this paper focuses on $\mathbb{F}_2$, the underlying techniques can be adapted to other finite fields.
-With the same techniques, we reproduce the previous best-known lower bounds over $\mathbb{F}_3$ as follows:
+With the same techniques, we reproduce the previous best-known lower bounds over $\mathbb{F}_3$:
 $\mathbf{R}(\langle 2,2,2\rangle)\ge 7$~\cite{blaser1999lower},
 $\mathbf{R}(\langle 2,2,3\rangle)\ge 10$~\cite{blaser1999lower}, and
 $\mathbf{R}(\langle 2,3,3\rangle)\ge 14$~\cite{blaser1999lower}.
 
 The rest of the paper is organized as follows.
-Section~2 introduces the symmetries of matrix multiplication tensors.
-Section~3 classifies the restriction subspace orbits.
-Section~4 presents a toy example proving $\mathbf{R}(\langle 2,2,2\rangle)\ge 7$ over $\mathbb{F}_2$ to illustrate the method.
-Section~5 formalizes the lower-bound techniques utilized in the automated search.
-Section~6 explains the structure of the proof certificates and their verification.
-Section~7 illustrates applications of our method to concrete tensor formats.
-Finally, Section~8 concludes the paper and discusses future work.
+Section~\ref{sec:symmetries} introduces the symmetries of matrix multiplication tensors.
+Section~\ref{sec:restrictions} classifies the restriction subspace orbits.
+Section~\ref{sec:toy-example} presents a toy example proving $\mathbf{R}(\langle 2,2,2\rangle)\ge 7$ over $\mathbb{F}_2$ to illustrate the method.
+Section~\ref{sec:techniques} formalizes the lower-bound techniques utilized in the automated search.
+Section~\ref{sec:certificates} explains the structure of the proof certificates and their verification.
+Section~\ref{sec:applications} illustrates applications of our method to concrete tensor formats.
+Finally, Section~\ref{sec:conclusion} concludes the paper and discusses future work.
 
-\section{Symmetries}
+\section{Symmetries}\label{sec:symmetries}
 The symmetries of the matrix multiplication tensor have been well studied~\cite{de1978varieties,chiantini2019geometry}.
 
 Consider the matrix multiplication problem $A B = C^T$, where $A \in \mathbb{K}^{l\times m}$, $B \in \mathbb{K}^{m\times n}$, and $C \in \mathbb{K}^{n\times l}$.
@@ -177,7 +177,7 @@ $$
 $$
 
 
-\section{Restrictions}
+\section{Restrictions}\label{sec:restrictions}
 Several recent studies have investigated structured matrix multiplication. Khoruzhii et al.~\cite{khoruzhii2025fasteralgorithmsstructuredmatrix} leveraged a flip graph search to find upper bounds for triangular, symmetric, and skew-symmetric matrices. Solomonik et al.~\cite{solomonik2015contracting} focused on contracting symmetric tensors like symmetric matrix-vector products, and Newhouse et al.~\cite{newhouse2024faster} developed an optimized symmetric matrix multiplication kernel for NVIDIA GPUs.
 
 In our framework, we consider the matrix multiplication problem subject to linear restrictions applied to the matrix $A$. Applying such linear restrictions effectively confines $A$ to a lower-dimensional subspace of $\mathbb{F}_2^{l\times m}$. For example, the restrictions $a_{i,j}=a_{j,i}$ constrain $A$ to symmetric matrices, and the restrictions $a_{0,j}=0$ reduce the problem to the $\langle l-1,m,n\rangle$ format.
@@ -193,9 +193,8 @@ The restrictions $\{a_{0,j}=0 : 0\le j<m\}$ and $\{a_{1,j}=0 : 0\le j<m\}$ are e
 Our goal is to classify the orbits of these subspaces in $\mathbb{F}_2^{l\times m}$ under the (extended) bimodule action. When dealing with square formats ($l=m=n$), the corresponding action group is $G=(\mathrm{GL}(l,\mathbb{F}_2)\times \mathrm{GL}(m,\mathbb{F}_2)) \rtimes C_2$.
 For $L \in \mathrm{GL}(l,\mathbb{F}_2)$ and $R \in \mathrm{GL}(m,\mathbb{F}_2)$, the action on a subspace $S \subseteq \mathbb{F}_2^{l\times m}$ is defined as $(L,R,0)\cdot S = \{LMR \mid M\in S\}$, and when transposed, $(L,R,1)\cdot S = \{LM^T R \mid M\in S\}$. If the matrices are not all square, the transpose operation is invalid, simplifying the action group to $G=\mathrm{GL}(l,\mathbb{F}_2)\times \mathrm{GL}(m,\mathbb{F}_2)$.
 
-Without considering the transpose action, the equivalence between two subspaces of dimension $d$ is exactly the tensor isomorphism (TI) problem, which asks whether two $l\times m\times d$ tensors are related by invertible changes of basis. Here, $L$ acts on the ``$l$'' dimension, $R$ linearly transforms the ``$m$'' dimension, and linear combinations among the restrictions act on the ``$d$'' dimension.
-
-TI sits above Graph Isomorphism and Code Equivalence in the complexity hierarchy---$\mathrm{GI} \leq_P \mathrm{CodeEq} \leq_P \mathrm{TI}$---yet lies in $\mathrm{NP} \cap \mathrm{coAM}$ and is unlikely to be NP-complete. Grochow and Qiao~\cite{grochow2023complexity} established the complexity class $\mathsf{TI}$, proving that 3-TI, algebra isomorphism, cubic form equivalence, alternating trilinear form equivalence (ATFE), and $p$-group isomorphism (class~2, exponent~$p$) are all mutually $\mathsf{TI}$-complete under polynomial-time reductions; the reduction from $d$-TI to 3-TI for any $d \geq 3$ shows the class is captured entirely by order-3 tensors. Futorny, Grochow, and Sergeichuk\cite{futorny2019wildness} proved that 3-TI is \emph{wild}---encoding essentially all finite-dimensional representation problems---simultaneously explaining its intractability and enabling $\mathsf{TI}$-completeness reductions via rank-based gadgets; Grochow and Qiao\cite{grochow2025complexity} later replaced these with \emph{linear-length} gadgets, tightening all reduction overheads. On TI algorithms between two $n\times n\times n$ tensors, Sun~\cite{sun2023faster} gave the first sub-$n^{O(\log n)}$ algorithm for $p$-groups of class~2 and exponent~$p$, running in $n^{O((\log n)^{5/6})}$ time via matrix-space individualization--refinement; Ivanyos, Mendoza, Qiao, Sun, and Zhang\cite{ivanyos2025faster} improved this to $N^{\widetilde{O}((\log N)^{1/2})}$ for the broader class of Frattini class-2 $p$-groups with order $N$ using maximal and noncommutative rank techniques; and Grochow and Qiao~\cite{grochow2025complexity} leveraged their linear-length gadgets to improve the best general upper bound for TI over $\mathbb{F}_q$ to $q^{\widetilde{O}(n^{3/2})}$, down from the brute-force bound of $q^{O(n^2)}$. Galesi, Grochow, Pitassi, and She\cite{galesi2023algebraic} established an $\Omega(n)$ lower bound on Polynomial Calculus and Sum-of-Squares degree for TI, providing formal barriers against Gr\"{o}bner-basis-type algebraic attacks. Cryptographically, Ji, Qiao, Song, and Yun~\cite{ji2019general} proposed the $\mathrm{GL}$ group action on tensors as a post-quantum one-way group action, spawning the MEDS~\cite{chou2023take} and ALTEQ~\cite{tang2022practical} signature schemes submitted to NIST's additional PQC call; both were subsequently broken---ALTEQ by Beullens' graph-theoretic attack~\cite{beullens2023graph} and MEDS by Narayanan--Qiao--Tang's invariant-based attack~\cite{narayanan2024algorithms}---and neither advanced to Round~2, while the related LESS scheme (based on linear code equivalence in the Hamming metric) did advance.
+Without the transpose action, equivalence of two $d$-dimensional subspaces is exactly the tensor isomorphism (TI) problem on $l \times m \times d$ tensors: $L$ acts on the first dimension, $R$ on the second, and linear combinations of the restrictions on the third.
+TI sits above Graph Isomorphism and Code Equivalence in the complexity hierarchy ($\mathrm{GI} \leq_P \mathrm{CodeEq} \leq_P \mathrm{TI}$), lies in $\mathrm{NP} \cap \mathrm{coAM}$, and is the defining problem of the complexity class $\mathsf{TI}$ introduced by Grochow and Qiao~\cite{grochow2023complexity}. No polynomial-time algorithm is known, and the best general upper bound for TI over $\mathbb{F}_q$ is $q^{\widetilde{O}(n^{3/2})}$~\cite{grochow2025complexity}.
 
 Any subspace can be represented by a set of restrictions in the reduced row echelon form (RREF) via Gauss-Jordan elimination. The RREF naturally serves as the lexicographically minimal form for a subspace (depending on the chosen lexicographical ordering of the variables, possibly after reversing row or column orders).
 
@@ -223,15 +222,15 @@ Any subspace can be represented by a set of restrictions in the reduced row eche
     \ParallelFor{\textit{transpose} in \{\textbf{false}, \textbf{true}\} if $l=m=n$}
     \ParallelFor{each $L\in \mathrm{GL}_l(\mathbb{F}_2)$}
     \State $\textit{left\_normalized} \gets \operatorname{RREF}(\{L M : M\in\textit{orbit}\}$) (transpose $M$ if \textit{transpose})
-      \If{$\textit{left\_normalized}\in\textit{visited}$}
-      \State \Return \textbf{false}
-      \EndIf
-      \EndParallelFor
-      \EndParallelFor
+    \If{$\textit{left\_normalized}\in\textit{visited}$}
+    \State \Return \textbf{false}
+    \EndIf
+    \EndParallelFor
+    \EndParallelFor
 
-      \ParallelFor{each $R\in \mathrm{GL}_m(\mathbb{F}_2)$}
-      \State $\textit{right\_normalized} \gets \operatorname{RREF}(\{M R : M\in\textit{orbit}\})$
-      \State Add $\textit{right\_normalized}$ to $\textit{visited}$
+    \ParallelFor{each $R\in \mathrm{GL}_m(\mathbb{F}_2)$}
+    \State $\textit{right\_normalized} \gets \operatorname{RREF}(\{M R : M\in\textit{orbit}\})$
+    \State Add $\textit{right\_normalized}$ to $\textit{visited}$
     \EndParallelFor
     \State \Return \textbf{true}
     \EndFunction
@@ -246,7 +245,7 @@ Rather than scanning all $2^{lm}$ candidates at each dimension, it only examines
 
 Moreover, instead of enumerating all full-rank matrices $L$ and $R$, Algorithm~\ref{alg:enumerate-subspaces} uses a hash set to store the right-normalized forms for each full-rank matrix $R$.
 Consequently, it only needs to enumerate the left-multiplication matrices $L$ to check for isomorphism.
-The $l\times m\times d$ tensor $(M_0, M_1, \cdots, M_{d-1})$ and tensor $(M'_0, M'_1, \cdots, M'_{d-1})$ are isomorphic if and only if there exist $L\in \mathrm{GL}(l,\mathbb{F}_2)$ and $R\in \mathrm{GL}(m,\mathbb{F}_2)$ such that $\operatorname{RREF}(\{L M_i : i\in [d]\}) = \operatorname{RREF}(\{M'_i R: i\in [d]\})$.
+The $l\times m\times d$ tensor $(M_0, M_1, \ldots, M_{d-1})$ and tensor $(M'_0, M'_1, \ldots, M'_{d-1})$ are isomorphic if and only if there exist $L\in \mathrm{GL}(l,\mathbb{F}_2)$ and $R\in \mathrm{GL}(m,\mathbb{F}_2)$ such that $\operatorname{RREF}(\{L M_i : i\in [d]\}) = \operatorname{RREF}(\{M'_i R: i\in [d]\})$.
 Roughly speaking, this trades square-root space for square-root time.
 
 The same algorithm applies to other finite fields, such as $\mathbb{F}_3$. For efficiency, we only enumerate the \textit{restriction} whose most significant element is 1.
@@ -268,8 +267,8 @@ The numbers of orbits that Algorithm~\ref{alg:enumerate-subspaces} finds are lis
     $4\times 4$ & true    & ($>1.6\times 10^{11}$)   & ($>8.8\times 10^{15}$)                 \\
   \end{tabular}
 \end{center}
-\footnotetext[1]{It takes less than 5 minutes on 32 CPU cores and consumes 70 GB of memory (0.1 USD). Alibaba Cloud, Elastic Compute Service, ecs.g9ae.8xlarge, AMD EPYC 9T95.}
-\footnotetext[2]{It is feasible to calculate the exact number, but we do not think we can improve the lower bound.}
+\footnotetext[1]{It takes 3.3 minutes and 0.05 USD on a cloud server with 192 CPU cores and consumes less than 96 GB of memory. AWS c8g.48xlarge Spot Instance. AWS Graviton4 processors.}
+\footnotetext[2]{The exact count is computable, but it is not likely to yield an improved matrix multiplication lower bound.}
 
 The lower bounds in the table are given by
 $$\sum_{d=0}^{lm}\frac{|\mathbb{F}_p|^{lmd}}{| \mathrm{GL}(l,\mathbb{F}_p) \times \mathrm{GL}(m,\mathbb{F}_p) \times \mathrm{GL}(d,\mathbb{F}_p)| \cdot |T|}$$ where $T$ is $C_2$ (transpose action) if $m=l=n$ and $C_1$ otherwise, and $\left| \mathrm{GL}(n,\mathbb{F}_p) \right| = \prod_{k=0}^{n-1} (p^n - p^k) $.
@@ -278,12 +277,12 @@ A slight improvement can be made by noting that each orbit of $d$-dimensional su
 Memory consumption can be further optimized by processing one invariant at a time, though this is unnecessary in our current implementation since this is not the bottleneck of our results. The invariants of $G$ include:
 \begin{itemize}
   \item \textbf{Matrix rank distribution:} $\rho_i(S)=|\{M\in S: \operatorname{rank}(M)=i\}|$, for $i=0,\ldots,\operatorname{min}(l,m)$.
-  \item \textbf{Left and right point profiles:} Let $B$ denote the basis of subspace $S$. The left point profile is defined as $\lambda_i(S) = | \{ \operatorname{rank}(x^T B) = i : x\in \mathbb{F}_2^{l} \}|$ for $i=0,\ldots,m$, where $x^T B$ is the $d\times m$ matrix $[x^T  B_0, x^T  B_1, \ldots, x^T  B_{d-1}]$. Similarly, the right point profile is $\mu_i(S) = | \{ \operatorname{rank}(Bx) = i : x\in \mathbb{F}_2^{m} \}|$ for $i=0,\ldots,l$, where $Bx$ is the $l\times d$ matrix $[B_0 x, B_1 x, \ldots, B_{d-1} x]$. Notably, if the transpose action is permitted ($l=m=n$), the invariant does not distinguish between left and right profiles.
+  \item \textbf{Left and right point profiles:} Let $B$ denote the basis of subspace $S$. The left point profile is defined as $\lambda_i(S) = | \{ x\in \mathbb{F}_2^{l} : \operatorname{rank}(x^T B) = i \}|$ for $i=0,\ldots,m$, where $x^T B$ is the $d\times m$ matrix $[x^T  B_0, x^T  B_1, \ldots, x^T  B_{d-1}]$. Similarly, the right point profile is $\mu_i(S) = | \{ x\in \mathbb{F}_2^{m} : \operatorname{rank}(Bx) = i \}|$ for $i=0,\ldots,l$, where $Bx$ is the $l\times d$ matrix $[B_0 x, B_1 x, \ldots, B_{d-1} x]$. Notably, if the transpose action is permitted ($l=m=n$), the invariant does not distinguish between left and right profiles.
 \end{itemize}
 
-\section{A Toy Example: $\mathbf{R}(\langle 2,2,2\rangle)\ge 7$ over $\mathbb{F}_2$}
+\section{A Toy Example: $\mathbf{R}(\langle 2,2,2\rangle)\ge 7$ over $\mathbb{F}_2$}\label{sec:toy-example}
 
-We take $\mathbf{R}(\langle 2,2,2\rangle)$ as a running example to illustrate how our tensor rank lower bound techniques operate in practice.
+We use $\langle 2,2,2\rangle$ as a running example to illustrate how our tensor rank lower bound techniques operate in practice.
 
 There are 10 orbits of restriction subspaces on the matrix $A$ over $\mathbb{F}_2$. We run dynamic programming on the 10 orbits to compute the lower bound, from the most restricted case to the general case.
 
@@ -302,7 +301,7 @@ $A=\begin{pmatrix}
 The matrix multiplication tensor is $T_1 = a_{1,1} \otimes b_{1,0} \otimes c_{0,1} + a_{1,1} \otimes b_{1,1} \otimes c_{1,1}$.
 
 \begin{lemma}[Flattening]\label{lem:flatten-rank}
-  The rank of a trilinear tensor is bounded below by the rank of the matrix obtained by flattening any two of its dimensions into one.
+  The tensor rank of an order-3 tensor is bounded below by the rank of the matrix obtained by flattening any two of its dimensions into one.
 \end{lemma}
 
 By flattening the spaces for $a$ and $b$ into a single space $x$ with formal variables $x_{i,j,j',k'} = a_{i,j} \otimes b_{j',k'}$, we reshape the tensor into $x_{1,1,1,0} \otimes c_{0,1} + x_{1,1,1,1} \otimes c_{1,1}$. Viewed as a matrix mapping, it has a matrix rank of 2. By Lemma~\ref{lem:flatten-rank}, $\mathbf{R} (T_1) \geq 2$.
@@ -362,7 +361,7 @@ $A=
   \end{pmatrix}$.
 The tensor $T_6$ expands into 10 terms. Flattening $T_6$ gives a trivial matrix rank of 4, so $\mathbf{R} (T_6) \geq 4$. We can improve this using the substitution method on $A$.
 
-We decompose $T_6 = \sum_{\lambda=1}^{\mathbf{R} (T_6)} u_\lambda \otimes v_\lambda \otimes w_\lambda$. The space $A$ is generated by the basis $\{a_{0,0}, a_{0,1}\}$. Over $\mathbb{F}_2$, the only non-zero linear forms in this space are $a_{0,0}$, $a_{0,1}$, and $a_{0,0}+a_{0,1}$. Every non-zero $A$-component $u_\lambda$ in our decomposition must be one of these three forms.
+We decompose $T_6 = \sum_{\lambda=1}^{\mathbf{R} (T_6)} u_\lambda \otimes v_\lambda \otimes w_\lambda$. The free entries of $A$ span the space with basis $\{a_{0,0}, a_{0,1}\}$. Over $\mathbb{F}_2$, the only non-zero linear forms in this space are $a_{0,0}$, $a_{0,1}$, and $a_{0,0}+a_{0,1}$. Every non-zero $A$-component $u_\lambda$ in our decomposition must be one of these three forms.
 
 Since the decomposition has at least 4 terms, the pigeonhole principle guarantees that at least one of these three linear forms appears as $u_\lambda$ at least twice (otherwise, $1+1+1=3 < 4$). Consequently, setting that specific linear form to $0$ will eliminate at least 2 terms from the decomposition, dropping the total rank by at least 2.
 \begin{itemize}
@@ -407,14 +406,14 @@ If $a_{0,1}+a_{1,0}$ appears as $u_\lambda$ at least once, setting $a_{0,1}+a_{1
 This yields $\mathbf{R} (T_9) \geq \mathbf{R} (T_8)+1 \geq 6+1=7$.
 The same argument applies to $a_{0,0}+a_{1,1}$, $a_{0,0}+a_{0,1}+a_{1,0}$, $a_{0,0}+a_{0,1}+a_{1,1}$, $a_{0,0}+a_{1,0}+a_{1,1}$, $a_{0,1}+a_{1,0}+a_{1,1}$ by the sandwich symmetry.
 
-These are all the possible cases for $u_\lambda$. Therefore, $\mathbf{R} (\langle 2,2,2 \rangle) = \mathbf{R} (T_9) \geq 7$.
+These exhaust all the nonzero cases for $u_\lambda$. Therefore, $\mathbf{R} (\langle 2,2,2 \rangle) = \mathbf{R} (T_9) \geq 7$.
 
-\section{Rank Lower Bound Techniques}
+\section{Rank Lower Bound Techniques}\label{sec:techniques}
 
 In this section, we formally describe the four lower bound techniques used in the dynamic programming process.
 
 \subsection{Flattening}
-The tensor rank of a trilinear tensor is trivially bounded below by its matrix rank under any flattening. We flatten the tensor along its three bipartitions (grouping dimensions $A$ and $B$, $B$ and $C$, and $C$ and $A$) and compute the respective matrix ranks. We then take the maximum of these three ranks as our flattening lower bound.
+The tensor rank of a order-3 tensor is trivially bounded below by its matrix rank under any flattening. We flatten the tensor along its three bipartitions (grouping dimensions $A$ and $B$, $B$ and $C$, and $C$ and $A$) and compute the respective matrix ranks. We then take the maximum of these three ranks as our flattening lower bound.
 
 \subsection{Forced Product}
 This technique systematically applies Hopcroft and Kerr's method (Lemma~\ref{lem:lemma-2}) to strip rank-1 terms from the decomposition. We illustrate this general algorithm using Orbit 4 as an example.
@@ -423,9 +422,9 @@ First, we group the tensor along the $C$ factor into $t$ terms. For $T_4$, this 
 
 We greedily choose a maximal linearly independent subset of these rank-1 terms, denoting the size of this subset by $s$. In $T_4$, the two rank-1 terms are independent, so we select both ($s=2$). By Lemma~\ref{lem:lemma-2}, any minimal bilinear algorithm computing this tensor can be assumed to explicitly compute these $s$ single products.
 
-We formally project these $s$ terms out of the tensor. Since the exact $C$-components of these terms in the decomposition are unknown, we must introduce arbitrary coefficients for the remaining $t-s$ basis elements of $C$. Over $\mathbb{F}_2$, this yields $s(t-s)$ unknown binary coefficients. We enumerate all $2^{s(t-s)}$ possible coefficient assignments, compute the flattening rank lower bound for each resulting residual tensor, and take the minimum across all cases. Because this branching step is computationally expensive, we skip this Forced Product technique entirely if $s(t-s)$ is too large. Finally, we repeat this entire process for all three cyclic permutations of the tensor and take the maximum of the resulting ranks.
+We project these $s$ terms out of the tensor. Since the exact $C$-components of these terms in the decomposition are unknown, we must introduce arbitrary coefficients for the remaining $t-s$ basis elements of $C$. Over $\mathbb{F}_2$, this yields $s(t-s)$ unknown binary coefficients. We enumerate all $2^{s(t-s)}$ possible coefficient assignments, compute the flattening rank lower bound for each resulting residual tensor, and take the minimum across all cases. Because this branching step is computationally expensive, we skip this Forced Product technique entirely if $s(t-s)$ is too large. Finally, we repeat this entire process for all three cyclic permutations of the tensor and take the maximum of the resulting ranks.
 
-In practice, we skip this technique if $s(t-s) \ge 32$. To accelerate the process, the $2^{s(t-s)}$ cases are enumerated in parallel on the GPU.
+In practice, we skip this technique if $s(t-s) \ge 32$. To accelerate the process, the $2^{s(t-s)}$ cases can be enumerated in parallel, even on the GPU.
 
 \subsection{Degenerate Reduction}
 If the restriction subspace $Y$ is contained within the subspace $X$, then $\mathbf{R}(T_X) \ge \mathbf{R}(T_Y)$. Thus, any lower bound established for the heavily restricted subspace $Y$ provides a lower bound for the looser subspace $X$.
@@ -433,7 +432,7 @@ If the restriction subspace $Y$ is contained within the subspace $X$, then $\mat
 \subsection{Substitution with Backtracking}
 Substitution is a powerful inductive technique, used extensively by Pan, Hopcroft, Kerr, and Bl{\"a}ser. The core idea is to assume the existence of a decomposition of length $r$, $T = \sum_{i=1}^{r} u_i \otimes v_i \otimes w_i$, and apply a carefully chosen linear functional to one factor space (e.g., setting a specific linear combination of $A$-variables to zero) so that one or more rank-1 terms vanish. By analyzing the rank of the residual tensor, we can conclude an inequality of the form $\mathbf{R}(T) \ge \mathbf{R}(T') + \text{(rank drop)}$.
 
-While the substitution for Orbit 6 was constructed manually in Section 3, we present an automated backtracking algorithm to systematically discover these substitution sequences.
+While the substitution for Orbit 6 was constructed manually in Section~\ref{sec:toy-example}, we present an automated backtracking algorithm to systematically discover these substitution sequences.
 
 First, we establish a baseline lower bound, denoted \textit{known\_lower\_bound}, using the previous three techniques. We enumerate all possible valid evaluations (non-zero linear forms) for the $A$-components $u_\lambda$ in the decomposition. By setting a subset of these $A$-components to zero, we algebraically reduce the tensor to another, more restricted orbit.
 
@@ -508,16 +507,16 @@ Formally, we summarize this process in Algorithm~\ref{alg:backtracking}. Note th
 \subsubsection{Optimizations}
 Algorithm~\ref{alg:backtracking} is sufficient for small formats like $\langle 2,2,2\rangle$, but requires significant optimization to scale to larger matrices.
 
-\paragraph{Multi-threading:} Because the backtracking for an orbit depends strictly on the lower bounds of orbits with more restrictions, we process them from the most restricted orbits to the general unconstrained case. For each number of restrictions, we process the orbits with that number of restrictions in parallel. Also, the a-component enumeration loop at the first depth of the backtracking tree is parallelized.
+\paragraph{Multi-threading:} Because the backtracking for an orbit depends strictly on the lower bounds of orbits with more restrictions, we process the orbits in order from most restricted to unconstrained. For each number of restrictions, we process the orbits with that number of restrictions in parallel. Also, the a-component enumeration loop at the first depth of the backtracking tree is parallelized.
 
 \paragraph{Symmetry Orbit Hash Map:} In Algorithm~\ref{alg:backtracking}, identifying the reduced orbit (Line~\ref{alg:find-orbit}) requires enumerating all full-rank matrices $P$, $Q^{-1}$, and transpositions, which is a major computational bottleneck. We optimize this by precomputing a hash map for each orbit that stores its right-multiplied and transposed configurations, just like the idea used in Algorithm~\ref{alg:enumerate-subspaces}. During the search, we only need to enumerate the left-multiplication matrices $P$, yielding a roughly square-root speedup in lookup time. To avoid lock contention during parallel inserts, the hash map is sharded (e.g., into 997 shards) using fine-grained mutex locks.
 
-\paragraph{Thread-Local Cache:} Even with the optimized map, enumerating $P$ remains expensive. We introduce a thread-local cache for each orbit that maps \textit{sub\_a\_components} directly to their previously computed lower bounds. To limit the memory usage, when a local cache exceeds a threshold (e.g. $3 \times 10^6$ elements), we randomly evict half of its entries.
+\paragraph{Thread-Local Cache:} Even with the optimized map, enumerating $P$ remains expensive. We introduce a thread-local cache for each orbit that maps \textit{sub\_a\_components} directly to their previously computed lower bounds. To limit the memory usage, when a local cache exceeds a threshold (e.g. $10^7$ elements), we randomly evict half of its entries.
 
 \paragraph{Incremental Target Strategy:} Rather than immediately searching for the ultimate target bound (e.g., 4 to 6 in the example), we iteratively set the target lower bound to the best-known lower bound plus one (e.g., 4 to 5, then 5 to 6). This incremental approach makes each step easier and increases the chance of pruning.
 
 \paragraph{Step Limits:} To prevent very slow search on difficult branches, we enforce a strict step limit. If the backtracking algorithm exceeds this limit, the entire backtracking search is aborted.
-\section{Proof Certificates and Verification}
+\section{Proof Certificates and Verification}\label{sec:certificates}
 
 To ensure our computational results are quickly verifiable, our framework generates a formal proof certificate for every established lower bound. For each restriction orbit, the certificate records the specific technique successfully used to establish its lower bound.
 
@@ -536,41 +535,43 @@ Depending on the technique, we record the following minimal information required
 
 Since the lower bound proof for an orbit only depends on orbits with more restrictions, we verify the certificates from the most restricted orbits to the general one. We accelerate this procedure by parallelizing the verification across all orbits with the same number of restrictions.
 
-\section{Applications}
+\section{Applications}\label{sec:applications}
 
 Using the automated framework, we established several tensor rank lower bounds over $\mathbb{F}_2$.
 
 \subsection{$\mathbf{R}(\langle 3,3,3\rangle)\ge 20$ over $\mathbb{F}_2$}
-Using a step limit of $10^7$, our search algorithm found the proof in 71 minutes on an Apple MacBook Air M4 with 8 cores and 16 GB of memory. The generated proof certificate is approximately 32\,MiB in size and can be verified on the same hardware in less than 10 seconds.
+Using a backtracking step limit of $10^7$, our search algorithm found the proof in 40 minutes on an Apple MacBook Air M4 with 8 cores and 16 GB of memory. The generated proof certificate is approximately 32\,MiB in size and can be verified on the same hardware in about 3 seconds.
 
 \subsection{$\mathbf{R}(\langle 2,3,4\rangle)\ge 19$ over $\mathbb{F}_2$}
-By cyclic symmetry, $\mathbf{R}(\langle 2,3,4\rangle) = \mathbf{R}(\langle 3,2,4\rangle)$. Our program directly evaluates the $\langle 3,2,4\rangle$ format. With a step limit of $10^7$, the search phase took 110 minutes on the MacBook Air.
+By symmetry, $\mathbf{R}(\langle 2,3,4\rangle) = \mathbf{R}(\langle 3,2,4\rangle)$. Our program runs on the $\langle 3,2,4\rangle$ format. With a backtracking step limit of $10^7$, the search phase took 110 minutes on the MacBook Air.
 
-The resulting proof certificate is under 100\,KiB. Because the proof uses the Forced Product technique at large scale, verification takes roughly 110 minutes on the same machine using only the CPU. Although the verification time matches the search time, it still remains valuable: the verifier program is significantly shorter and simpler than the search algorithm, making it much easier to audit independently for logical correctness.
+The resulting proof certificate is under 100\,KiB. Because the proof uses the Forced Product technique at large scale, verification takes roughly 110 minutes on the same machine using only the CPU. Although verification takes as long as the search, it remains valuable: the verifier is much shorter and simpler than the search code, and so is much easier to audit.
 The verification can be accelerated by an NVIDIA L20 GPU to approximately 1 minute.
 
 \subsection{$\mathbf{R}(\langle 3,3,4\rangle)\ge 25$ over $\mathbb{F}_2$}
-For this larger format, we increased the step limit to $10^8$. The search was run on a cloud server equipped with 64 CPU cores and 128 GB of memory, taking 3.5 days to complete (at a compute cost of roughly 168 USD\footnote{Alibaba Cloud. Elastic Compute Service. ecs.c9ae.16xlarge. AMD EPYC 9T95.\label{fn:ecs-c9ae-16xlarge}}).
+For this larger format, we increased the backtracking step limit to $10^8$. The search was run on a cloud server equipped with 64 CPU cores and 128 GB of memory, taking 4.6 days to complete (at a compute cost of roughly 52 USD\footnote{AWS c8g.16xlarge Spot Instance. AWS Graviton4 processors.\label{fn:aws-c8g-16xlarge}}).
+With restriction subspaces of dimension greater than or equal to 4, we set the backtracking thread-local cache threshold to $10^7$. With subspaces of dimension less than 4, we set the threshold to $3\times 10^6$ to avoid OOM.
 
-The proof certificate is approximately 626\,MiB. Verification takes roughly 3.5 hours on the same CPU server (7 USD\footref{fn:ecs-c9ae-16xlarge}), or just 32 minutes using an NVIDIA L20 GPU (1.3 USD\footnote{Alibaba Cloud. Elastic Compute Service. ecs.gn8is.4xlarge.\label{fn:ecs-gn8is}}).
+The proof certificate is approximately 600\,MiB.
+Verification takes roughly 70 minutes on 192 CPUs (1 USD\footnote{AWS c8g.48xlarge Spot Instance. AWS Graviton4 processors.\label{fn:aws-c8g-48xlarge}}), or just 32 minutes using an NVIDIA L20 GPU.
 
 \subsection{$\mathbf{R}(\langle 3,4,4\rangle)\ge 29$ over $\mathbb{F}_2$}
-For the $\langle 3,4,4\rangle$ format, we used a step limit of $8\times 10^5$. The search completed in roughly 7 hours on a larger cloud server featuring 192 CPU cores and 384 GB of memory (costing about 42 USD\footnote{Alibaba Cloud. Elastic Compute Service. ecs.c9ae.48xlarge. AMD EPYC 9T95.\label{fn:ecs-c9ae-48xlarge}}).
+For the $\langle 3,4,4\rangle$ format, we used a backtracking step limit of $4\times 10^5$. The search completed in 4.9 hours on a cloud server featuring 192 CPU cores and 384 GB of memory (costing about 4.5 USD\footref{fn:aws-c8g-48xlarge}).
 
-This produced a 2\,GiB proof certificate. It can be verified on the same 192-core machine in about 3.3 hours (20 USD\footref{fn:ecs-c9ae-48xlarge}), or on an NVIDIA L20 GPU in approximately 2.5 hours (5.4 USD\footref{fn:ecs-gn8is}).
+This produced a proof certificate of approximately 500\,MiB. It can be verified on the same 192-core machine in about 3.4 hours (3 USD\footref{fn:aws-c8g-48xlarge}), or on an NVIDIA L20 GPU in approximately 2.5 hours.
 
 \subsection{Code and Data}
 
 The complete source code for the search and verification algorithms, along with the generated proof certificates, are publicly available at: \\
 \url{https://github.com/wcgbg/matrix-multiplication-lower-bound-n3r20f2}.
 
-\section{Conclusion and Open Problems}
+\section{Conclusion and Open Problems}\label{sec:conclusion}
 
 In this paper, we presented an automated framework for establishing lower bounds on the bilinear complexity of small matrix multiplication over $\mathbb{F}_2$. By systematically combining restriction-subspace orbit classification and dynamic programming on the orbits with four lower-bound techniques, we obtained several new bounds. Most notably, our computer search program successfully proved that $\mathbf{R}(\langle 3,3,3\rangle) \ge 20$ over $\mathbb{F}_2$, improving upon a longstanding lower bound. This demonstrates that computational methods can effectively navigate the combinatorial explosion inherent in tensor rank decompositions when the search space is rigorously pruned using algebraic symmetries and canonical forms. Furthermore, this framework also applies to the multiplication of structured matrices, such as triangular, symmetric, and skew-symmetric matrices.
 
-Several natural directions for future research remain open. While the results presented here focus on $\mathbb{F}_2$, the underlying methodology can be adapted for other finite fields. We reproduce some lower bounds over $\mathbb{F}_3$ without improving them. Discovering new lower bounds over other finite fields is a problem we leave for future work.
+Several natural directions for future research remain open. First, while the results presented here focus on $\mathbb{F}_2$, the underlying methodology can be adapted for other finite fields. We reproduce some lower bounds over $\mathbb{F}_3$ without improving them. Discovering new lower bounds over other finite fields is a problem we leave for future work.
 
-Second, although we successfully evaluated formats up to $\langle 3,4,4\rangle$, scaling the search to $\langle 4,4,4\rangle$ remains out of reach due to the huge number (more than $10^{11}$) of orbits. Discovering stronger theoretical constraints, or more aggressive algorithmic symmetry-breaking techniques to further compress the search space, is a critical next step for scaling these methods.
+Second, although we successfully evaluated formats up to $\langle 3,4,4\rangle$, scaling the search to $\langle 4,4,4\rangle$ remains out of reach due to the huge number (more than $10^{11}$) of orbits. Scaling these methods further will likely require stronger theoretical constraints or more aggressive symmetry-breaking to compress the search space.
 
 Finally, the exact tensor rank of $\langle 3,3,3\rangle$ over $\mathbb{F}_2$ is still an open question, currently constrained between our new lower bound of 20 and the known upper bound of 23. Closing this gap completely remains a compelling challenge for future computational algebraic complexity research.
 

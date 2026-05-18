@@ -45,7 +45,7 @@ public:
     }
   }
 
-  pb::RestrictedMMCollection Search() {
+  pb::RestrictedMMCollection Search(bool fill_verbose_fields = false) {
     std::vector<std::vector<Restrictions<n0, n1>>> dim_to_restrictions(n0 * n1 +
                                                                        1);
     dim_to_restrictions[0].push_back(Restrictions<n0, n1>());
@@ -66,29 +66,24 @@ public:
     Tensor<n0, n1, n2> matrix_multiplication_tensor =
         MatrixMultiplicationTensor<n0, n1, n2>();
     pb::RestrictedMMCollection collection;
+    collection.set_n0(n0);
+    collection.set_n1(n1);
+    collection.set_n2(n2);
+    collection.set_p(2);
     for (int dim = n0 * n1; dim >= 0; --dim) {
       for (const auto &restrictions : dim_to_restrictions[dim]) {
         int index = collection.restricted_mm_size();
         pb::RestrictedMM *rmm = collection.add_restricted_mm();
         rmm->set_index(index);
-        rmm->set_n0(n0);
-        rmm->set_n1(n1);
-        rmm->set_n2(n2);
-        rmm->set_p(2);
-        for (const auto &restriction : restrictions) {
-          auto restriction_pb = rmm->add_restriction();
-          for (int i = 0; i < n0; ++i) {
-            for (int j = 0; j < n1; ++j) {
-              int value = (restriction >> (i * n1 + j)) & 1u;
-              restriction_pb->add_a(value);
-            }
-          }
-          restriction_pb->set_text(
-              StaticMatrix<n0, n1>(restriction).ToString());
+        rmm->set_compact_restrictions(
+            RestrictionsToCompactString<n0, n1>(restrictions));
+        if (fill_verbose_fields) {
+          rmm->set_restrictions_text(
+              RestrictionsToString<n0, n1>(restrictions));
+          rmm->set_tensor(TensorToSparseString<n0, n1, n2>(
+              ApplyRestrictionsToTensor<n0, n1, n2>(
+                  restrictions, matrix_multiplication_tensor)));
         }
-        rmm->set_tensor(TensorToSparseString<n0, n1, n2>(
-            ApplyRestrictionsToTensor<n0, n1, n2>(
-                restrictions, matrix_multiplication_tensor)));
       }
     }
     LOG(INFO) << "total_count=" << collection.restricted_mm_size();

@@ -84,9 +84,9 @@ public:
     DCHECK_LT(value, 2);
     int bit_pos = i * n1 + j;
     if (value) {
-      data_ |= (1U << bit_pos);
+      data_ |= (DataType(1) << bit_pos);
     } else {
-      data_ &= ~(1U << bit_pos);
+      data_ &= ~(DataType(1) << bit_pos);
     }
   }
 

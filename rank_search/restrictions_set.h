@@ -54,7 +54,9 @@ public:
 private:
   static constexpr int kNumOfShards = 997;
 
-  std::array<boost::unordered_flat_set<Restrictions<n0, n1>>, kNumOfShards>
+  std::array<
+      boost::unordered_flat_set<Restrictions<n0, n1>, RestrictionsHash<>>,
+      kNumOfShards>
       sets_;
   std::array<std::mutex, kNumOfShards> mutexes_;
 };

@@ -43,6 +43,13 @@ template <int n0, int n1, int n2> void TestSetGet(std::mt19937_64 *gen) {
         transformed, gl_left, gl_right, transpose);
     EXPECT_EQ((RestrictionsToString<n0, n1>(restrictions)),
               (RestrictionsToString<n0, n1>(reconstructed)));
+
+    if (trial == 0) {
+      ASSERT_FALSE(transformed.empty());
+      transformed.pop_back();
+      EXPECT_DEATH(map.Get(transformed, nullptr, nullptr, nullptr),
+                   "Restrictions not found: ");
+    }
   }
 }
 

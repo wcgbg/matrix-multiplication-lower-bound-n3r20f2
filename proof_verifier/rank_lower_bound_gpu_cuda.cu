@@ -1,15 +1,16 @@
 // CUDA implementation of the rank lower bound loop.
 
 #include <algorithm>
+#include <chrono>
 #include <condition_variable>
 #include <cstdint>
-#include <cstdio>
-#include <cstring>
+#include <iomanip>
 #include <mutex>
 #include <optional>
 #include <queue>
 
 #include <cuda_runtime.h>
+#include <ng-log/logging.h>
 
 #include "proof_verifier/rank_lower_bound_gpu.h"
 
@@ -270,20 +271,21 @@ std::optional<int> RankLowerBoundForcedProductALoopCuda(
   constexpr int r1_bc_cols = n12 * n20;
 
   if (params.r1_bc_data == nullptr || params.r1_bc_rows == 0) {
-    printf("%s:%d\n", __FILE__, __LINE__);
+    LOG(ERROR) << "Invalid params: r1_bc_data=" << params.r1_bc_data
+               << ", r1_bc_rows=" << params.r1_bc_rows;
     return std::nullopt;
   }
 
   int device_id = AcquireGpu();
   if (device_id < 0) {
-    printf("%s:%d: AcquireGpu failed\n", __FILE__, __LINE__);
+    LOG(ERROR) << "AcquireGpu failed";
     return std::nullopt;
   }
   auto start_time = std::chrono::steady_clock::now();
   GpuGuard gpu_guard{device_id};
   cudaError_t err = cudaSetDevice(device_id);
   if (err != cudaSuccess) {
-    printf("%s:%d: %s\n", __FILE__, __LINE__, cudaGetErrorString(err));
+    LOG(ERROR) << "cudaSetDevice: " << cudaGetErrorString(err);
     return std::nullopt;
   }
 
@@ -292,19 +294,19 @@ std::optional<int> RankLowerBoundForcedProductALoopCuda(
   int *d_min_result = nullptr;
   err = cudaMalloc(&d_r2p, tensor_size);
   if (err != cudaSuccess) {
-    printf("%s:%d: %s\n", __FILE__, __LINE__, cudaGetErrorString(err));
+    LOG(ERROR) << "cudaMalloc(d_r2p): " << cudaGetErrorString(err);
     return std::nullopt;
   }
   err =
       cudaMalloc(&d_r1_bc, static_cast<size_t>(params.r1_bc_rows * r1_bc_cols));
   if (err != cudaSuccess) {
-    printf("%s:%d: %s\n", __FILE__, __LINE__, cudaGetErrorString(err));
+    LOG(ERROR) << "cudaMalloc(d_r1_bc): " << cudaGetErrorString(err);
     cudaFree(d_r2p);
     return std::nullopt;
   }
   err = cudaMalloc(&d_min_result, sizeof(int));
   if (err != cudaSuccess) {
-    printf("%s:%d: %s\n", __FILE__, __LINE__, cudaGetErrorString(err));
+    LOG(ERROR) << "cudaMalloc(d_min_result): " << cudaGetErrorString(err);
     cudaFree(d_r1_bc);
     cudaFree(d_r2p);
     return std::nullopt;
@@ -315,7 +317,7 @@ std::optional<int> RankLowerBoundForcedProductALoopCuda(
       reinterpret_cast<const uint8_t *>(&params.r2p[0][0][0]);
   err = cudaMemcpy(d_r2p, src_tensor, tensor_size, cudaMemcpyHostToDevice);
   if (err != cudaSuccess) {
-    printf("%s:%d: %s\n", __FILE__, __LINE__, cudaGetErrorString(err));
+    LOG(ERROR) << "cudaMemcpy(d_r2p): " << cudaGetErrorString(err);
     cudaFree(d_min_result);
     cudaFree(d_r1_bc);
     cudaFree(d_r2p);
@@ -326,7 +328,7 @@ std::optional<int> RankLowerBoundForcedProductALoopCuda(
                    static_cast<size_t>(params.r1_bc_rows * r1_bc_cols),
                    cudaMemcpyHostToDevice);
   if (err != cudaSuccess) {
-    printf("%s:%d: %s\n", __FILE__, __LINE__, cudaGetErrorString(err));
+    LOG(ERROR) << "cudaMemcpy(d_r1_bc): " << cudaGetErrorString(err);
     cudaFree(d_min_result);
     cudaFree(d_r1_bc);
     cudaFree(d_r2p);
@@ -351,7 +353,7 @@ std::optional<int> RankLowerBoundForcedProductALoopCuda(
   err = cudaMemcpy(d_min_result, &h_initial_min, sizeof(int),
                    cudaMemcpyHostToDevice);
   if (err != cudaSuccess) {
-    printf("%s:%d: %s\n", __FILE__, __LINE__, cudaGetErrorString(err));
+    LOG(ERROR) << "cudaMemcpy(d_min_result init): " << cudaGetErrorString(err);
     cudaFree(d_min_result);
     cudaFree(d_r1_bc);
     cudaFree(d_r2p);
@@ -361,16 +363,19 @@ std::optional<int> RankLowerBoundForcedProductALoopCuda(
   for (uint64_t chunk_start = 0; chunk_start < num_iterations;
        chunk_start += kChunkSize) {
     if (chunk_start > 0 && chunk_start % (kChunkSize * 256) == 0) {
-      printf("%s:%d] [device_id=%d] %lu / %lu = %.2f%%\n", __FILE__, __LINE__,
-             device_id, chunk_start, num_iterations,
-             static_cast<double>(chunk_start) / num_iterations * 100.0);
+      const double progress_pct =
+          static_cast<double>(chunk_start) / num_iterations * 100.0;
+      LOG(INFO) << "[device_id=" << device_id << "] Progress: " << chunk_start
+                << "/" << num_iterations << " = " << std::fixed
+                << std::setprecision(2) << progress_pct << "%";
     }
     uint64_t chunk_end = std::min(chunk_start + kChunkSize, num_iterations);
 
     err = cudaMemcpy(d_min_result, &h_initial_min, sizeof(int),
                      cudaMemcpyHostToDevice);
     if (err != cudaSuccess) {
-      printf("%s:%d: %s\n", __FILE__, __LINE__, cudaGetErrorString(err));
+      LOG(ERROR) << "cudaMemcpy(d_min_result reset): "
+                 << cudaGetErrorString(err);
       break;
     }
 
@@ -379,13 +384,13 @@ std::optional<int> RankLowerBoundForcedProductALoopCuda(
 
     err = cudaGetLastError();
     if (err != cudaSuccess) {
-      printf("%s:%d: %s\n", __FILE__, __LINE__, cudaGetErrorString(err));
+      LOG(ERROR) << "kernel launch: " << cudaGetErrorString(err);
       break;
     }
 
     err = cudaDeviceSynchronize();
     if (err != cudaSuccess) {
-      printf("%s:%d: %s\n", __FILE__, __LINE__, cudaGetErrorString(err));
+      LOG(ERROR) << "cudaDeviceSynchronize: " << cudaGetErrorString(err);
       break;
     }
 
@@ -393,7 +398,7 @@ std::optional<int> RankLowerBoundForcedProductALoopCuda(
     err = cudaMemcpy(&chunk_min, d_min_result, sizeof(int),
                      cudaMemcpyDeviceToHost);
     if (err != cudaSuccess) {
-      printf("%s:%d: %s\n", __FILE__, __LINE__, cudaGetErrorString(err));
+      LOG(ERROR) << "cudaMemcpy(chunk_min): " << cudaGetErrorString(err);
       break;
     }
 
@@ -420,8 +425,10 @@ std::optional<int> RankLowerBoundForcedProductALoopCuda(
                          end_time - start_time)
                          .count();
   if (duration_ms > 1000) {
-    printf("%s:%d] [device_id=%d] rank=%d duration=%.2f\n", __FILE__, __LINE__,
-           device_id, ret, duration_ms / 1000.0);
+    LOG(INFO) << "[device_id=" << device_id
+              << "] RankLowerBoundForcedProductALoopCuda. rank=" << ret
+              << " duration=" << std::fixed << std::setprecision(2)
+              << (duration_ms / 1000.0);
   }
 
   return ret;

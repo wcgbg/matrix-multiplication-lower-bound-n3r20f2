@@ -1,6 +1,8 @@
 #pragma once
 
 #include <bit>
+#include <cstdint>
+#include <cstring>
 #include <limits>
 #include <sstream>
 #include <string>
@@ -18,22 +20,39 @@ template <int n0, int n1>
 using Restrictions = std::vector<StaticMatrixData<n0, n1>>;
 
 template <int n0, int n1>
-Restrictions<n0, n1> RestrictionsFromProto(const pb::RestrictedMM &rmm) {
-  Restrictions<n0, n1> restrictions;
-  for (const auto &restriction_proto : rmm.restriction()) {
-    CHECK_EQ(restriction_proto.a_size(), n0 * n1);
-    StaticMatrix<n0, n1> restriction;
-    for (int i = 0; i < n0; ++i) {
-      for (int j = 0; j < n1; ++j) {
-        int value = restriction_proto.a(i * n1 + j);
-        CHECK_GE(value, 0);
-        CHECK_LT(value, 2) << "coefficient must be in F_2";
-        restriction.Set(i, j, static_cast<uint8_t>(value));
-      }
-    }
-    restrictions.push_back(restriction.Data());
-  }
+Restrictions<n0, n1>
+RestrictionsFromCompactString(const std::string &compact_string) {
+  static_assert(std::is_same_v<uint16_t, StaticMatrixData<n0, n1>>);
+  static_assert(std::endian::native == std::endian::little);
+  CHECK_EQ(compact_string.size() % sizeof(StaticMatrixData<n0, n1>), 0);
+  Restrictions<n0, n1> restrictions(compact_string.size() /
+                                    sizeof(StaticMatrixData<n0, n1>));
+  std::memcpy(restrictions.data(), compact_string.data(),
+              compact_string.size());
   return restrictions;
+}
+
+template <int n0, int n1>
+std::string
+RestrictionsToCompactString(const Restrictions<n0, n1> &restrictions) {
+  static_assert(std::is_same_v<uint16_t, StaticMatrixData<n0, n1>>);
+  static_assert(std::endian::native == std::endian::little);
+  return std::string(reinterpret_cast<const char *>(restrictions.data()),
+                     restrictions.size() * sizeof(StaticMatrixData<n0, n1>));
+}
+
+template <int n0, int n1>
+int NumRestrictions(const pb::RestrictedMM &rmm) {
+  CHECK_EQ(rmm.compact_restrictions().size() %
+               sizeof(StaticMatrixData<n0, n1>),
+           0);
+  return rmm.compact_restrictions().size() /
+         sizeof(StaticMatrixData<n0, n1>);
+}
+
+template <int n0, int n1>
+Restrictions<n0, n1> RestrictionsFromProto(const pb::RestrictedMM &rmm) {
+  return RestrictionsFromCompactString<n0, n1>(rmm.compact_restrictions());
 }
 
 template <int n0, int n1>
@@ -93,9 +112,27 @@ ApplyRestrictionsToTensor(const Restrictions<n0, n1> &restrictions,
   return result;
 }
 
-template <int n0, int n1> struct RestrictionsHash {
-  size_t operator()(const Restrictions<n0, n1> &r) const {
-    return boost::hash_value(r);
+// Fast hash for Restrictions (a small std::vector of integral DataType).
+// Reads the buffer 8 bytes at a time.
+template <typename MatrixDataType = uint16_t> struct RestrictionsHash {
+  static_assert(std::is_integral_v<MatrixDataType>);
+  size_t operator()(const std::vector<MatrixDataType> &r) const noexcept {
+    const uint8_t *data = reinterpret_cast<const uint8_t *>(r.data());
+    size_t bytes = r.size() * sizeof(MatrixDataType);
+    uint64_t h = bytes;
+    while (bytes >= 8) {
+      uint64_t chunk;
+      std::memcpy(&chunk, data, 8);
+      h = (chunk + (h << 6)) + (0x9e3779b9 + (h >> 2));
+      data += 8;
+      bytes -= 8;
+    }
+    if (bytes > 0) {
+      uint64_t chunk = 0;
+      std::memcpy(&chunk, data, bytes);
+      h = (chunk + (h << 6)) + (0x9e3779b9 + (h >> 2));
+    }
+    return h;
   }
 };
 

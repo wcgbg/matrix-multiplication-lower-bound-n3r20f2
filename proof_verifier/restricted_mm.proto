@@ -41,18 +41,19 @@ message RankLowerBoundProof {
 
 message RestrictedMM {
   uint32 index = 1;
-  int32 n0 = 2;
-  int32 n1 = 3;
-  int32 n2 = 4;
-  int32 p = 5; // in field F_p
-  repeated Matrix restriction = 6;
-  string tensor = 7;
-  optional int32 rank_lower_bound = 8;
-  RankLowerBoundProof rank_lower_bound_proof = 9;
-  optional int32 rank_upper_bound = 10;
-  string rank_upper_bound_proof = 11;
+  bytes compact_restrictions = 2;
+  string restrictions_text = 3; // for human readability; never read. e.g. "[00,01],[01,10]".
+  string tensor = 4; // for human readability; never read
+  optional int32 rank_lower_bound = 5;
+  RankLowerBoundProof rank_lower_bound_proof = 6;
+  optional int32 rank_upper_bound = 7;
+  string rank_upper_bound_proof = 8;
 }
 
 message RestrictedMMCollection {
-  repeated RestrictedMM restricted_mm = 1;
+  int32 n0 = 1;
+  int32 n1 = 2;
+  int32 n2 = 3;
+  int32 p = 4; // in field F_p
+  repeated RestrictedMM restricted_mm = 5;
 }

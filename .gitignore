@@ -44,6 +44,8 @@ data/
 .DS_Store
 Thumbs.db
 compile_commands.json
+.claude/
+CLAUDE.md
 
 # Temporary files
 *.tmp

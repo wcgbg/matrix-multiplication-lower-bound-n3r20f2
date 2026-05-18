@@ -85,6 +85,20 @@ cc_binary(
     ],
 )
 
+cc_binary(
+    name = "add_verbose_fields_main",
+    srcs = ["add_verbose_fields_main.cc"],
+    malloc = "@mimalloc",
+    deps = [
+        "//proof_verifier:dimension",
+        "//proof_verifier:proto_io",
+        "//proof_verifier:restricted_mm_cc_proto",
+        "//proof_verifier:restrictions",
+        "//proof_verifier:tensor",
+        "@ng-log//:ng-log",
+    ],
+)
+
 cc_library(
     name = "restrictions_map",
     hdrs = ["restrictions_map.h"],

@@ -182,7 +182,9 @@ private:
   std::vector<StaticMatrix<n1, n0>> m_to_transpose_n01_; // n0*n1 -> n1*n0
   std::vector<StaticMatrix<n0, n1>> multiplication_table_n001_;
   std::vector<StaticMatrix<n0, n1>> multiplication_table_n011_;
-  std::array<boost::unordered_flat_map<Restrictions<n0, n1>, Value>, kNumOfMaps>
+  std::array<boost::unordered_flat_map<Restrictions<n0, n1>, Value,
+                                       RestrictionsHash<>>,
+             kNumOfMaps>
       maps_;
   std::array<std::mutex, kNumOfMaps> mutexes_;
 };

@@ -46,19 +46,26 @@ void BacktrackingProof::Save(const std::string &path) const {
   out.push(io::gzip_compressor());
   out.push(io::file_sink(path));
   CHECK(out) << "Failed to open file for writing: " << path;
+  static_assert(std::endian::native == std::endian::little);
   out.write(reinterpret_cast<const char *>(&n), sizeof(n));
+  CHECK(out);
   out.write(reinterpret_cast<const char *>(dfs_restrictions_size_array.data()),
             n * sizeof(uint8_t));
+  CHECK(out);
   out.write(reinterpret_cast<const char *>(mask_array.data()),
             n * sizeof(uint32_t));
+  CHECK(out);
   for (size_t i = 0; i < n; ++i) {
     const uint8_t b = transpose_array[i] ? 1 : 0;
     out.write(reinterpret_cast<const char *>(&b), sizeof(b));
   }
+  CHECK(out);
   out.write(reinterpret_cast<const char *>(gl_left_array.data()),
             n * sizeof(uint16_t));
+  CHECK(out);
   out.write(reinterpret_cast<const char *>(gl_right_array.data()),
             n * sizeof(uint16_t));
+  CHECK(out);
   io::close(out);
 }
 
@@ -69,7 +76,9 @@ BacktrackingProof BacktrackingProof::Load(const std::string &path) {
   in.push(io::file_source(path));
   CHECK(in) << "Failed to open file for reading: " << path;
   uint64_t n = 0;
+  static_assert(std::endian::native == std::endian::little);
   in.read(reinterpret_cast<char *>(&n), sizeof(n));
+  CHECK(in);
   proof.dfs_restrictions_size_array.resize(static_cast<size_t>(n));
   proof.mask_array.resize(static_cast<size_t>(n));
   proof.transpose_array.resize(static_cast<size_t>(n));
@@ -77,17 +86,22 @@ BacktrackingProof BacktrackingProof::Load(const std::string &path) {
   proof.gl_right_array.resize(static_cast<size_t>(n));
   in.read(reinterpret_cast<char *>(proof.dfs_restrictions_size_array.data()),
           n * sizeof(uint8_t));
+  CHECK(in);
   in.read(reinterpret_cast<char *>(proof.mask_array.data()),
           n * sizeof(uint32_t));
+  CHECK(in);
   for (uint64_t i = 0; i < n; ++i) {
-    uint8_t b;
+    uint8_t b = 0;
     in.read(reinterpret_cast<char *>(&b), sizeof(b));
     proof.transpose_array[static_cast<size_t>(i)] = (b != 0);
   }
+  CHECK(in);
   in.read(reinterpret_cast<char *>(proof.gl_left_array.data()),
           n * sizeof(uint16_t));
+  CHECK(in);
   in.read(reinterpret_cast<char *>(proof.gl_right_array.data()),
           n * sizeof(uint16_t));
+  CHECK(in);
   proof.Check();
   return proof;
 }

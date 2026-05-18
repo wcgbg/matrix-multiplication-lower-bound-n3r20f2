@@ -12,6 +12,8 @@
 
 DEFINE_bool(slow, false, "Run the simple but slow version");
 DEFINE_string(output_path, "", "Output path");
+DEFINE_bool(verbose, false,
+            "Also write verbose fields to protobuf (larger output)");
 
 int main(int argc, char **argv) {
   FLAGS_alsologtostderr = true;
@@ -22,10 +24,10 @@ int main(int argc, char **argv) {
   pb::RestrictedMMCollection collection;
   if (FLAGS_slow) {
     RestrictionEnumeratorSlow<kN0, kN1, kN2> restriction_enumerator;
-    collection = restriction_enumerator.Search();
+    collection = restriction_enumerator.Search(FLAGS_verbose);
   } else {
     RestrictionEnumerator<kN0, kN1, kN2> restriction_enumerator;
-    collection = restriction_enumerator.Search();
+    collection = restriction_enumerator.Search(FLAGS_verbose);
   }
 
   std::string output_path = FLAGS_output_path;

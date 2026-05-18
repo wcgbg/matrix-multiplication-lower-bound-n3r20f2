@@ -67,14 +67,15 @@ template <int n0, int n1, int n2>
 void VerifyDegenerateProof(
     const Restrictions<n0, n1> &restrictions, int rank_lower_bound,
     const pb::DegenerateProof &degenerate_proof,
-    const boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t>
+    const boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t,
+                                    RestrictionsHash<>>
         &restrictions_to_rank_lower_bound) {
   Restrictions<n0, n1> extended = restrictions;
   extended.push_back(degenerate_proof.extra_restriction());
-  auto transformed = TransformRestrictions<n0, n1, n2>(
+  Restrictions<n0, n1> transformed = TransformRestrictions<n0, n1, n2>(
       extended, degenerate_proof.transformation());
-  int rank = GaussJordanElimination(n0 * n1, &transformed);
-  CHECK_EQ(rank, static_cast<int>(transformed.size()));
+  CHECK_EQ(transformed.size(), extended.size());
+  CHECK_EQ(transformed.size(), restrictions.size() + 1);
   auto it = restrictions_to_rank_lower_bound.find(transformed);
   CHECK(it != restrictions_to_rank_lower_bound.end())
       << "transformed extended restrictions not found in map. restrictions="
@@ -90,7 +91,8 @@ template <int n0, int n1, int n2>
 void VerifyBacktrackingProof(
     const Restrictions<n0, n1> &restrictions, int rank_lower_bound,
     const pb::RankLowerBoundProof &proof_proto, int rmm_index,
-    const boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t>
+    const boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t,
+                                    RestrictionsHash<>>
         &restrictions_to_rank_lower_bound,
     const std::string &bt_proof_root_dir) {
   std::string proof_path =
@@ -106,14 +108,10 @@ void VerifyBacktrackingProof(
 // fails.
 template <int n0, int n1, int n2>
 void VerifyOne(const pb::RestrictedMM &rmm,
-               const boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t>
+               const boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t,
+                                               RestrictionsHash<>>
                    &restrictions_to_rank_lower_bound,
                const std::string &bt_proof_root_dir) {
-  CHECK_EQ(rmm.p(), 2);
-  CHECK_EQ(rmm.n0(), n0);
-  CHECK_EQ(rmm.n1(), n1);
-  CHECK_EQ(rmm.n2(), n2);
-
   const auto &proof = rmm.rank_lower_bound_proof();
   CHECK_NE(proof.proof_case(), pb::RankLowerBoundProof::PROOF_NOT_SET)
       << rmm.index();
@@ -126,8 +124,6 @@ void VerifyOne(const pb::RestrictedMM &rmm,
   }
   Tensor<n0, n1, n2> tensor = ApplyRestrictionsToTensor<n0, n1, n2>(
       restrictions, MatrixMultiplicationTensor<n0, n1, n2>());
-  CHECK_EQ((TensorToSparseString<n0, n1, n2>(tensor)), rmm.tensor())
-      << rmm.index();
 
   if (proof.has_flatten_matrix_proof()) {
     VerifyFlattenProof<n0, n1, n2>(tensor, rmm.rank_lower_bound());
@@ -151,15 +147,19 @@ void VerifyOne(const pb::RestrictedMM &rmm,
 template <int n0, int n1, int n2>
 void VerifyRankLowerBound(const pb::RestrictedMMCollection &collection,
                           const std::string &bt_proof_root_dir) {
-  boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t>
+  boost::unordered_flat_map<Restrictions<n0, n1>, uint32_t, RestrictionsHash<>>
       restrictions_to_rank_lower_bound;
+  CHECK_EQ(collection.n0(), n0);
+  CHECK_EQ(collection.n1(), n1);
+  CHECK_EQ(collection.n2(), n2);
+  CHECK_EQ(collection.p(), 2);
   size_t total_count = 0;
   for (int dim = n0 * n1; dim >= 0; dim--) {
     LOG(INFO) << "dim=" << dim;
     std::vector<const pb::RestrictedMM *> rmms;
     for (int i = 0; i < collection.restricted_mm_size(); ++i) {
       const pb::RestrictedMM &rmm = collection.restricted_mm(i);
-      if (rmm.restriction_size() == dim) {
+      if (NumRestrictions<n0, n1>(rmm) == dim) {
         rmms.push_back(&rmm);
       }
     }
@@ -179,7 +179,7 @@ void VerifyRankLowerBound(const pb::RestrictedMMCollection &collection,
   CHECK_GT(collection.restricted_mm_size(), 0);
   const auto &last_rmm =
       collection.restricted_mm(collection.restricted_mm_size() - 1);
-  CHECK_EQ(last_rmm.restriction_size(), 0);
+  CHECK_EQ((NumRestrictions<n0, n1>(last_rmm)), 0);
   LOG(INFO) << std::format("Verified. The rank lower bound for {}x{}x{} matrix "
                            "multiplication tensor is {} over F_2.",
                            n0, n1, n2, last_rmm.rank_lower_bound());

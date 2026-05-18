@@ -23,10 +23,10 @@ for basename in testdata/rank_lower_bound_computer/rmms_n{123,132,213,231,312,32
 
     write_dimention_h ${basename}
 
-    bazel build -c opt :restrictions_enumerator_main
+    bazel build --config=opt :restrictions_enumerator_main
     bazel-bin/restrictions_enumerator_main --output_path=${basename}.pb.txt
     
-    bazel build -c opt :rank_lower_bound_computer_main
+    bazel build --config=opt :rank_lower_bound_computer_main
     output_path=${basename}_basic_degenerate_backtracking.pb.txt
     extra_args=""
     if [[ ${basename} == *332 || ${basename} == *233 || ${basename} == *323 || ${basename} == *333 ]]; then

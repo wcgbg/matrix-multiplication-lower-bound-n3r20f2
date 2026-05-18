@@ -13,7 +13,7 @@ All commands below should be run from the **repository root** (the directory con
 To verify the proof for the `3×3×3` matrix multiplication tensor:
 
 ```bash
-bazel build -c opt //proof_verifier:rank_lower_bound_verifier_main
+bazel build --config=opt //proof_verifier:rank_lower_bound_verifier_main
 
 bazel-bin/proof_verifier/rank_lower_bound_verifier_main proof_cert/rmms_n333.pb.txt
 ```
@@ -35,4 +35,16 @@ Run
 
 It change the matrix size in `proof_verifier/dimension.h` before running `rank_lower_bound_verifier_main`. 
 
-`rmms_n344.pb.txt` is too large. So, it is compressed. Please `gunzip proof_cert/rmms_n344.pb.txt.gz` before verifing the proof.
+`rmms_n344.pb.txt` is stored compressed as `proof_cert/rmms_n344.pb.txt.gz`. Please `gunzip proof_cert/rmms_n344.pb.txt.gz` before the verification.
+
+## (Optional) Inspecting a proof by hand
+
+Proof certificates only store the compact (binary) `compact_restrictions` field. To read the restriction matrices and the restricted tensor for each entry in a human-readable form, populate the `restrictions_text` and `tensor` fields with the `add_verbose_fields_main` tool from `rank_search/` (see `rank_search/README.md`):
+
+```bash
+bazel build --config=opt //rank_search:add_verbose_fields_main
+
+bazel-bin/rank_search/add_verbose_fields_main proof_cert/rmms_n333.pb.txt
+```
+
+The compiled-in matrix size (`kN0/kN1/kN2` in `proof_verifier/dimension.h`) must match the proof.

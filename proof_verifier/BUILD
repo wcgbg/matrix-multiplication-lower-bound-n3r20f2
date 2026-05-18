@@ -150,12 +150,13 @@ cc_test(
 
 cuda_library(
     name = "rank_lower_bound_gpu_cuda",
-    tags = ["cuda"],
     srcs = ["rank_lower_bound_gpu_cuda.cu"],
     hdrs = ["rank_lower_bound_gpu.h"],
+    tags = ["cuda"],
     # copts = ["-Wno-deprecated-gpu-targets"],
     deps = [
         ":tensor",
+        "@ng-log//:ng-log",
     ],
 )
 
@@ -203,8 +204,8 @@ cc_test(
 )
 
 cc_binary(
-    name = "rank_lower_bound_foreced_product_benchmark_432_main",
-    srcs = ["rank_lower_bound_foreced_product_benchmark_432_main.cc"],
+    name = "rank_lower_bound_forced_product_benchmark_432_main",
+    srcs = ["rank_lower_bound_forced_product_benchmark_432_main.cc"],
     malloc = "@mimalloc",
     deps = [
         ":rank_lower_bound_basic_technics",
@@ -214,8 +215,8 @@ cc_binary(
 )
 
 cc_binary(
-    name = "rank_lower_bound_foreced_product_benchmark_443_main",
-    srcs = ["rank_lower_bound_foreced_product_benchmark_443_main.cc"],
+    name = "rank_lower_bound_forced_product_benchmark_443_main",
+    srcs = ["rank_lower_bound_forced_product_benchmark_443_main.cc"],
     malloc = "@mimalloc",
     deps = [
         ":rank_lower_bound_basic_technics",
@@ -260,6 +261,20 @@ cc_binary(
         ":rank_lower_bound_verifier",
         ":restricted_mm_cc_proto",
         "@ng-log//:ng-log",
+    ],
+)
+
+cc_test(
+    name = "rank_lower_bound_verifier_test",
+    srcs = ["rank_lower_bound_verifier_test.cc"],
+    data = ["//proof_cert:rmms_n222_fixture"],
+    deps = [
+        ":backtracking_proof",
+        ":proto_io",
+        ":rank_lower_bound_verifier",
+        ":restricted_mm_cc_proto",
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
     ],
 )
 
